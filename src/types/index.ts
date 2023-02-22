@@ -1,0 +1,25 @@
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+export type LoginData = {
+  email: string;
+  password: string;
+};
+
+export type RegisterData = LoginData & {
+  name: string;
+};
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+
+export interface Menu {
+  id: string;
+  title: string;
+}

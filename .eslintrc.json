@@ -1,0 +1,128 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react/jsx-runtime"
+  ],
+  "settings": {
+    "import/no-unresolved": "off",
+    "import/resolver": {
+      "typescript": {},
+      "import/extensions": ["ts", "tsx", "svg", "js", "jsx"],
+      "import/resolver": {
+        "node": {
+          "extensions": [".ts", ".tsx"]
+        }
+      },
+      "import/ignore": ["node_modules"]
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks",
+    "inclusive-language"
+  ],
+  "rules": {
+    "@typescript-eslint/no-empty-interface": "warn",
+    "react/function-component-definition": "off",
+    "react/require-default-props": ["off"],
+    "react/no-unused-prop-types": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": [
+      "warn",
+      {
+        "ignoreTypeValueShadow": true
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "inclusive-language/use-inclusive-words": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "mjs": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never",
+        "jsx": "never",
+        "js": "never"
+      }
+    ],
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "no-use-before-define": "off",
+    "react/prop-types": "off",
+    "max-len": [
+      "warn",
+      {
+        "code": 120
+      }
+    ],
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": [".tsx"]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "import/no-default-export": "error",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react/jsx-props-no-spreading": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["**/*.stories.tsx", "**/*.test.js", "**/*.spec.js"]
+      }
+    ]
+  }
+}
