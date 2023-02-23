@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
+import { Loading } from "components/UI";
 import { useStore } from "hooks";
 import { RegisterData } from "types";
 
@@ -52,10 +53,12 @@ export const Register: React.FC = observer(() => {
             {...register("confirmPassword", { required: true })}
           />
           <button
-            className="rounded-lg bg-base-content bg-opacity-[0.95] p-3 text-base-100 hover:bg-opacity-100"
+            className="flex h-12 items-center justify-center rounded-lg bg-base-content bg-opacity-[0.95] p-3 text-base-100 hover:bg-opacity-100"
             type="submit"
           >
-            {userStore.status === "loading" ? "loading" : "Sign Up"}
+            <Loading loading={userStore.status === "loading"} type="dots">
+              Sign Up
+            </Loading>
           </button>
         </form>
       </div>

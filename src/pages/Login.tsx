@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
+import { Loading } from "components/UI";
 import { useStore } from "hooks";
 import { LoginData } from "types";
 
@@ -34,10 +35,12 @@ export const Login: React.FC = observer(() => {
             {...register("password", { required: true })}
           />
           <button
-            className="rounded-lg bg-base-content bg-opacity-[0.95] p-3 text-base-100 hover:bg-opacity-100"
+            className="flex h-12 items-center justify-center rounded-lg bg-base-content bg-opacity-[0.95] p-3 text-base-100 hover:bg-opacity-100"
             type="submit"
           >
-            {status === "loading" ? "loading" : "Log In"}
+            <Loading loading={status === "loading"} type="dots">
+              Log In
+            </Loading>
           </button>
         </form>
       </div>

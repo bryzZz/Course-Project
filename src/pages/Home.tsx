@@ -1,71 +1,58 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from "react";
 
-import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { Modal } from "components/UI";
-import { menuKeys } from "constants/menuKeys";
-import { useStore } from "hooks";
-import { MenuService } from "services/MenuService";
+import { Loading, Modal } from "components/UI";
+import { useMenus } from "hooks";
 
 interface CreateMenuForm {
   title: string;
 }
 
-export const Home: React.FC = observer(() => {
-  const queryClient = useQueryClient();
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const { user, status, logout } = useStore((store) => store.userStore);
-
-  const { data } = useQuery({
-    queryKey: menuKeys.lists(),
-    queryFn: MenuService.getAll,
-  });
-
-  const createMutation = useMutation({
-    mutationFn: MenuService.create,
-    onSettled: () => {
-      queryClient.invalidateQueries(menuKeys.lists());
-    },
-  });
+export const Home: React.FC = () => {
+  const {
+    data: menus,
+    isLoading: isMenusLoading,
+    createMutation: { mutate, isLoading: isMenuCreating },
+  } = useMenus();
 
   const { register, handleSubmit } = useForm<CreateMenuForm>();
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
   const onSubmit = handleSubmit(({ title }) => {
-    createMutation.mutate(title, {
-      onSettled: () => {
-        setModalIsOpen(false);
-      },
-    });
+    mutate(title, { onSettled: closeModal });
   });
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
-  console.log(data);
-
   return (
-    <div className="Home">
-      <header className="flex justify-between p-4">
-        <p>
-          Home {user.email} {user.name}
-        </p>
-        <button className="btn-primary btn" type="button" onClick={logout}>
-          {status === "loading" ? "loading" : "Logout"}
-        </button>
-      </header>
-      <button className="btn" type="button" onClick={openModal}>
-        Create
-      </button>
-      {data && data.map(({ id, title }) => <div key={id}>{title}</div>)}
+    <div className="pt-6">
+      <div className="mx-auto w-full max-w-4xl">
+        <h2 className="mb-4 text-xl font-bold">Menus</h2>
+        <Loading loading={isMenusLoading}>
+          <div className="flex flex-wrap gap-6">
+            {menus &&
+              menus.map(({ id, title }) => (
+                <div
+                  key={id}
+                  className="cursor-pointer rounded-2xl py-10 px-12 shadow-xl"
+                >
+                  {title}
+                </div>
+              ))}
+            <div
+              className="cursor-pointer rounded-2xl border-2 border-dashed border-base-content border-opacity-30 py-10 px-12 hover:border-opacity-60"
+              onClick={openModal}
+            >
+              Create New Menu
+            </div>
+          </div>
+        </Loading>
+      </div>
+
       <Modal isOpen={modalIsOpen} onClose={closeModal} title="Create menu">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <input
@@ -84,4 +71,4 @@ export const Home: React.FC = observer(() => {
       </Modal>
     </div>
   );
-});
+};

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
 
+import { Loading } from "components/UI";
 import { RootStoreContextProvider } from "context/RootStoreContext";
 import { AuthorizedRoutes, UnauthorizedRoutes } from "routes";
 import { RootStore } from "store/RootStore";
@@ -25,7 +26,9 @@ export const App: React.FC = observer(() => {
     <BrowserRouter>
       <RootStoreContextProvider value={rootStore}>
         <QueryClientProvider client={queryClient}>
-          {status === "init" ? "Loading" : <Routes />}
+          <Loading loading={status === "init"} cover>
+            <Routes />
+          </Loading>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </RootStoreContextProvider>
