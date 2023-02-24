@@ -13,6 +13,10 @@ export class MenuService {
     return api.post<Menu>("/menus", args);
   }
 
+  static async get(id: string) {
+    return api.get<Menu>("/menus", { params: { id } }).then((r) => r.data);
+  }
+
   static async getAll() {
     return api.get<Menu[]>("/menus").then((r) => r.data);
   }

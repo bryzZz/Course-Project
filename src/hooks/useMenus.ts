@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { menuKeys } from "constants/menuKeys";
+import { menuKeys } from "constants/queryKeys";
 import { MenuService } from "services/MenuService";
 
 export const useMenus = () => {

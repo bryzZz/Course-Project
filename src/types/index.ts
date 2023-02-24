@@ -27,3 +27,13 @@ export interface Menu {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Block {
+  id: string;
+  text: string;
+  place: number;
+  imageUrl?: string;
+  menuId: string;
+  createdAt: string;
+  updatedAt: string;
+}

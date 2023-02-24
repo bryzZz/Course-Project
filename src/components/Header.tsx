@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = observer(() => {
   return (
     <header className="flex items-center justify-between border-b border-base-content py-2">
       <p>Home {user.name}</p>
-      <button className="btn" type="button" onClick={logout}>
+      <button className="btn w-36 rounded-full" type="button" onClick={logout}>
         <Loading loading={status === "loading"} type="dots">
           Logout
         </Loading>

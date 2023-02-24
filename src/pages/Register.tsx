@@ -52,10 +52,7 @@ export const Register: React.FC = observer(() => {
             type="password"
             {...register("confirmPassword", { required: true })}
           />
-          <button
-            className="flex h-12 items-center justify-center rounded-lg bg-base-content bg-opacity-[0.95] p-3 text-base-100 hover:bg-opacity-100"
-            type="submit"
-          >
+          <button className="btn w-full rounded-full" type="submit">
             <Loading loading={userStore.status === "loading"} type="dots">
               Sign Up
             </Loading>

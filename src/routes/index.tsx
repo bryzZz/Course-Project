@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import { Home, Login, Register } from "pages";
+import { EditMenu, Home, Login, Register } from "pages";
 import { Authorized, Unauthorized } from "pages/Layouts";
 
 export const UnauthorizedRoutes = () => {
@@ -10,6 +10,7 @@ export const UnauthorizedRoutes = () => {
         <Route index element={<Login />} />
         <Route path="register" element={<Register />} />
       </Route>
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };
@@ -19,7 +20,7 @@ export const AuthorizedRoutes = () => {
     <Routes>
       <Route path="/" element={<Authorized />}>
         <Route index element={<Home />} />
-        {/* <Route path=":id" element={<Note />} /> */}
+        <Route path="edit/:id" element={<EditMenu />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
