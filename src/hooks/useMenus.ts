@@ -18,5 +18,12 @@ export const useMenus = () => {
     },
   });
 
-  return Object.assign(res, { createMutation });
+  const deleteMutation = useMutation({
+    mutationFn: MenuService.delete,
+    onSettled: () => {
+      queryClient.invalidateQueries(menuKeys.lists());
+    },
+  });
+
+  return Object.assign(res, { createMutation, deleteMutation });
 };

@@ -22,7 +22,7 @@ export default defineConfig(({ command }) => ({
       constants: path.resolve(__dirname, "./src/constants"),
       routes: path.resolve(__dirname, "./src/routes"),
       context: path.resolve(__dirname, "./src/context"),
-      helpers: path.resolve(__dirname, "./src/helpers"),
+      utils: path.resolve(__dirname, "./src/utils"),
       store: path.resolve(__dirname, "./src/store"),
     },
   },

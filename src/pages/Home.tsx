@@ -4,29 +4,48 @@ import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
 
+import { Menu } from "components";
 import { Loading, Modal } from "components/UI";
 import { useMenus } from "hooks";
+import { convertToBase64 } from "utils";
 
 interface CreateMenuForm {
   title: string;
+  description: string;
+  image: FileList;
 }
 
 export const Home: React.FC = () => {
   const {
     data: menus,
     isLoading: isMenusLoading,
-    createMutation: { mutate, isLoading: isMenuCreating },
+    createMutation: { mutate: createMenu, isLoading: isMenuCreating },
+    deleteMutation: { mutate: deleteMenu },
   } = useMenus();
 
-  const { register, handleSubmit } = useForm<CreateMenuForm>();
+  const { register, handleSubmit, reset } = useForm<CreateMenuForm>();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  const onSubmit = handleSubmit(({ title }) => {
-    mutate(title, { onSettled: closeModal });
+  const onSubmit = handleSubmit(async ({ title, description, image }) => {
+    const imageBase64 = await convertToBase64(image[0]);
+
+    createMenu(
+      { title, description, image: imageBase64 },
+      {
+        onSettled: () => {
+          closeModal();
+          reset();
+        },
+      }
+    );
   });
+
+  const handleDeleteMenu = (id: string) => {
+    deleteMenu(id);
+  };
 
   return (
     <div className="pt-6">
@@ -35,16 +54,15 @@ export const Home: React.FC = () => {
         <Loading loading={isMenusLoading}>
           <div className="flex flex-wrap gap-6">
             {menus &&
-              menus.map(({ id, title }) => (
-                <div
-                  key={id}
-                  className="cursor-pointer rounded-2xl py-10 px-12 shadow-xl"
-                >
-                  {title}
-                </div>
+              menus.map((menu) => (
+                <Menu
+                  key={menu.id}
+                  data={menu}
+                  onDelete={() => handleDeleteMenu(menu.id)}
+                />
               ))}
             <div
-              className="cursor-pointer rounded-2xl border-2 border-dashed border-base-content border-opacity-30 py-10 px-12 hover:border-opacity-60"
+              className="basis-64 cursor-pointer rounded-2xl border-2 border-dashed border-base-content border-opacity-30 pt-16 text-center text-lg hover:border-opacity-60"
               onClick={openModal}
             >
               Create New Menu
@@ -61,11 +79,24 @@ export const Home: React.FC = () => {
             type="text"
             {...register("title", { required: true })}
           />
+          <input
+            className="modal-action rounded-lg border border-base-content border-opacity-30 bg-transparent py-2 px-3 outline-none focus:border-opacity-100"
+            placeholder="Description"
+            type="text"
+            {...register("description", { required: true })}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            {...register("image", { required: true })}
+          />
           <button
             className="rounded-lg bg-base-content bg-opacity-[0.95] p-3 text-base-100 hover:bg-opacity-100"
             type="submit"
           >
-            Create
+            <Loading loading={isMenuCreating} type="dots">
+              Create
+            </Loading>
           </button>
         </form>
       </Modal>

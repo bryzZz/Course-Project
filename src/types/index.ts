@@ -22,4 +22,8 @@ export interface AuthResponse {
 export interface Menu {
   id: string;
   title: string;
+  description: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
