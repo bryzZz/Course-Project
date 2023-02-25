@@ -37,3 +37,7 @@ export interface Block {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface MenuPublic extends Menu {
+  Blocks: Block[];
+}

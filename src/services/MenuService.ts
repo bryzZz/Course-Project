@@ -1,4 +1,4 @@
-import { Menu } from "types";
+import { Menu, MenuPublic } from "types";
 
 import { api } from "../http";
 
@@ -23,5 +23,11 @@ export class MenuService {
 
   static async delete(id: string) {
     return api.delete("/menus", { params: { id } });
+  }
+
+  static async getPublic(id: string) {
+    return api
+      .get<MenuPublic>("/menus-public", { params: { id } })
+      .then((r) => r.data);
   }
 }
