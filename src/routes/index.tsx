@@ -9,8 +9,8 @@ export const UnauthorizedRoutes = () => {
       <Route path="/" element={<Unauthorized />}>
         <Route index element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="menu/:id" element={<Menu />} />
       </Route>
+      <Route path="/menu/:id" element={<Menu />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
@@ -22,8 +22,8 @@ export const AuthorizedRoutes = () => {
       <Route path="/" element={<Authorized />}>
         <Route index element={<Home />} />
         <Route path="edit/:id" element={<EditMenu />} />
-        <Route path="menu/:id" element={<Menu />} />
       </Route>
+      <Route path="/menu/:id" element={<Menu />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
