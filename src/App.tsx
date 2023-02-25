@@ -14,13 +14,18 @@ const rootStore = new RootStore();
 const queryClient = new QueryClient();
 
 export const App: React.FC = observer(() => {
-  const { isAuth, status, checkAuth } = rootStore.userStore;
+  const { isAuth, status } = rootStore.userStore;
 
   const Routes = isAuth ? AuthorizedRoutes : UnauthorizedRoutes;
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    const controller = new AbortController();
+    rootStore.userStore.checkAuth(controller.signal);
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   return (
     <BrowserRouter>

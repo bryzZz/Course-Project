@@ -2,14 +2,15 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable prefer-destructuring */
 
-import axios from "axios";
-import { makeAutoObservable } from "mobx";
+import axios, { AxiosResponse, GenericAbortSignal } from "axios";
+import { flow, makeAutoObservable } from "mobx";
 
 import { AuthService } from "services/AuthService";
-import { AuthResponse, LoginData, RegisterData, User } from "types";
+import { AuthResponse, FlowReturn, LoginData, RegisterData, User } from "types";
+import { requestRefresh } from "utils";
 
-import { RootStore } from "./RootStore";
 import { API_URL } from "../http";
+import { RootStore } from "./RootStore";
 
 type Status = "init" | "loading" | "success" | "error";
 
@@ -82,16 +83,13 @@ export class UserStore {
     this.setUser({} as User);
   };
 
-  checkAuth = async () => {
+  *checkAuth(signal: GenericAbortSignal): FlowReturn<typeof requestRefresh> {
     this.status = "init";
 
-    const res = await this.apiRequest(
-      () =>
-        axios.get<AuthResponse>(`${API_URL}/refresh`, {
-          withCredentials: true,
-        }),
+    const res = yield this.apiRequest(
+      () => requestRefresh(signal),
       true
-    );
+    ) as any;
 
     if (!res) return;
 
@@ -99,5 +97,5 @@ export class UserStore {
 
     this.setAuth(true);
     this.setUser(res.data.user);
-  };
+  }
 }
