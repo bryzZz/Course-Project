@@ -12,8 +12,8 @@ export const Header: React.FC = observer(() => {
 
   return (
     <header className="h-14 bg-base-100 shadow">
-      <div className="container mx-auto flex h-full items-center justify-end">
-        <div className="dropdown dropdown-bottom dropdown-end">
+      <div className="container mx-auto flex h-full items-center">
+        <div className="dropdown dropdown-bottom dropdown-end ml-auto">
           <label tabIndex={0}>
             <div className="flex cursor-pointer items-center gap-2 rounded p-2 text-base-content text-opacity-80 transition-all hover:bg-base-content hover:bg-opacity-10">
               <BsPersonCircle className="h-4 w-4 fill-current" />

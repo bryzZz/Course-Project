@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { Menu } from "components";
 import { Loading, Modal } from "components/UI";
@@ -22,6 +23,8 @@ export const Home: React.FC = () => {
     createMutation: { mutate: createMenu, isLoading: isMenuCreating },
     deleteMutation: { mutate: deleteMenu },
   } = useMenus();
+
+  const navigate = useNavigate();
 
   const { register, handleSubmit, reset } = useForm<CreateMenuForm>();
 
@@ -43,9 +46,9 @@ export const Home: React.FC = () => {
     );
   });
 
-  const handleDeleteMenu = (id: string) => {
-    deleteMenu(id);
-  };
+  const handleDeleteMenu = (id: string) => deleteMenu(id);
+  const handleEditMenu = (id: string) => navigate(`/edit/${id}`);
+  const handleViewMenu = (id: string) => navigate(`/menu/${id}`);
 
   return (
     <div className="pt-6">
@@ -58,6 +61,8 @@ export const Home: React.FC = () => {
                 <Menu
                   key={menu.id}
                   data={menu}
+                  onEdit={() => handleEditMenu(menu.id)}
+                  onView={() => handleViewMenu(menu.id)}
                   onDelete={() => handleDeleteMenu(menu.id)}
                 />
               ))}
