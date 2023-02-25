@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
 
 import { observer } from "mobx-react-lite";
@@ -22,18 +23,28 @@ export const Login: React.FC = observer(() => {
       <h2 className="text-2xl font-semibold">Login</h2>
       <div className="w-full max-w-md overflow-hidden rounded-2xl py-6 px-8 shadow-xl">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
-          <input
-            className="rounded-lg border border-base-content border-opacity-30 bg-transparent py-2 px-3 outline-none focus:border-opacity-100"
-            placeholder="Email"
-            type="email"
-            {...register("email", { required: true })}
-          />
-          <input
-            className="rounded-lg border border-base-content border-opacity-30 bg-transparent py-2 px-3 outline-none focus:border-opacity-100"
-            placeholder="Password"
-            type="password"
-            {...register("password", { required: true })}
-          />
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Email</span>
+            </label>
+            <input
+              type="email"
+              placeholder="abc@mail.ru"
+              className="input-bordered input w-full focus:border-primary focus:outline-none"
+              {...register("email", { required: true })}
+            />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Password</span>
+            </label>
+            <input
+              type="password"
+              placeholder="12345678"
+              className="input-bordered input w-full focus:border-primary focus:outline-none"
+              {...register("password", { required: true })}
+            />
+          </div>
           <button className="btn w-full rounded-full" type="submit">
             <Loading loading={status === "loading"} type="dots">
               Log In
