@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
-import { Loading } from "components/UI";
+import { Input, Loading } from "components/UI";
 import { useStore } from "hooks";
 import { LoginData } from "types";
 
@@ -23,28 +23,16 @@ export const Login: React.FC = observer(() => {
       <h2 className="text-2xl font-semibold">Login</h2>
       <div className="w-full max-w-md overflow-hidden rounded-2xl py-6 px-8 shadow-xl">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              placeholder="abc@mail.ru"
-              className="input-bordered input w-full focus:border-primary focus:outline-none"
-              {...register("email", { required: true })}
-            />
-          </div>
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input
-              type="password"
-              placeholder="12345678"
-              className="input-bordered input w-full focus:border-primary focus:outline-none"
-              {...register("password", { required: true })}
-            />
-          </div>
+          <Input
+            label="Email"
+            type="email"
+            {...register("email", { required: true })}
+          />
+          <Input
+            label="Password"
+            type="password"
+            {...register("password", { required: true })}
+          />
           <button className="btn w-full rounded-full" type="submit">
             <Loading loading={status === "loading"} type="dots">
               Log In

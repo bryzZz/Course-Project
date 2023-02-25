@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { Menu } from "components";
-import { Loading, Modal } from "components/UI";
+import { Input, Loading, Modal } from "components/UI";
 import { useMenus } from "hooks";
 import { convertToBase64 } from "utils";
 
@@ -78,27 +78,26 @@ export const Home: React.FC = () => {
 
       <Modal isOpen={modalIsOpen} onClose={closeModal} title="Create menu">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
-          <input
-            className="modal-action rounded-lg border border-base-content border-opacity-30 bg-transparent py-2 px-3 outline-none focus:border-opacity-100"
-            placeholder="Title"
+          <Input
+            label="Title"
+            placeholder="My First Menu"
             type="text"
             {...register("title", { required: true })}
           />
-          <input
-            className="modal-action rounded-lg border border-base-content border-opacity-30 bg-transparent py-2 px-3 outline-none focus:border-opacity-100"
-            placeholder="Description"
+          <Input
+            label="Description"
+            placeholder="This menu is so cool"
             type="text"
             {...register("description", { required: true })}
           />
-          <input
+          <Input
+            className="file-input-bordered file-input w-full max-w-xs"
+            label="Avatar"
             type="file"
             accept="image/*"
             {...register("image", { required: true })}
           />
-          <button
-            className="rounded-lg bg-base-content bg-opacity-[0.95] p-3 text-base-100 hover:bg-opacity-100"
-            type="submit"
-          >
+          <button className="btn w-full rounded-md" type="submit">
             <Loading loading={isMenuCreating} type="dots">
               Create
             </Loading>
