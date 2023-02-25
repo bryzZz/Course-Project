@@ -6,9 +6,11 @@ import { Header } from "components";
 
 export const Authorized: React.FC = () => {
   return (
-    <div className="container mx-auto h-screen bg-gray-100 px-4">
+    <div className="h-screen bg-base-300">
       <Header />
-      <Outlet />
+      <div className="container mx-auto h-[calc(100vh-3.5rem)] px-4">
+        <Outlet />
+      </div>
     </div>
   );
 };

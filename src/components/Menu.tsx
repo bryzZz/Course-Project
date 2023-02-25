@@ -21,11 +21,11 @@ export const Menu: React.FC<MenuProps> = ({ data, onDelete }) => {
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
-      className="basis-64 cursor-pointer rounded-lg bg-white p-6 pb-10 shadow"
+      className="basis-64 cursor-pointer rounded-lg bg-base-100 p-6 pb-10 shadow"
       onClick={handleClick}
     >
       <div className="avatar">
-        <div className="w-12 rounded-full ring ring-primary">
+        <div className="w-12 rounded-full">
           <img src={imageUrl} alt={title} />
         </div>
       </div>
