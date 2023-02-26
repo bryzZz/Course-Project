@@ -22,8 +22,9 @@ export interface AuthResponse {
 export interface Menu {
   id: string;
   title: string;
-  description: string;
-  imageUrl: string;
+  description: string | null;
+  footer: string | null;
+  imageUrl: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -40,6 +41,13 @@ export interface Block {
 
 export interface MenuPublic extends Menu {
   Blocks: Block[];
+}
+
+export interface CreateMenuForm {
+  title: string;
+  description?: string;
+  footer?: string;
+  image?: FileList;
 }
 
 export interface CreateBlockForm {

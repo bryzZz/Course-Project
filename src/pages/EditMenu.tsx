@@ -32,15 +32,21 @@ export const EditMenu: React.FC = () => {
   return (
     <Loading loading={isLoading} cover>
       <div className="flex flex-col items-center pt-4">
-        <div className="avatar">
-          <div className="w-20 rounded-full">
-            <img src={menu?.imageUrl} alt={menu?.title} />
+        {menu?.imageUrl && (
+          <div className="avatar">
+            <div className="w-20 rounded-full">
+              <img src={menu?.imageUrl || ""} alt={menu?.title} />
+            </div>
           </div>
-        </div>
-        <h2 className="text-xl font-bold">{menu?.title}</h2>
-        <p className="text-md mb-4">{menu?.description}</p>
+        )}
 
-        <BlockList menuId={id} />
+        {menu?.title && <h2 className="text-xl font-bold">{menu.title}</h2>}
+
+        {menu?.description && <p className="text-md">{menu.description}</p>}
+
+        <BlockList menuId={id} className={menu?.footer ? "my-6" : ""} />
+
+        {menu?.footer && <p className="text-md mb-4">{menu.footer}</p>}
       </div>
     </Loading>
   );

@@ -1,10 +1,8 @@
-import { Menu, MenuPublic } from "types";
+import { Menu, MenuPublic, CreateMenuForm } from "types";
 
 import { api } from "../http";
 
-interface CreateArgs {
-  title: string;
-  description?: string;
+interface CreateArgs extends Omit<CreateMenuForm, "image"> {
   image?: string;
 }
 

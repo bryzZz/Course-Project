@@ -8,13 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { Menu } from "components";
 import { Input, Loading, Modal } from "components/UI";
 import { useMenus } from "hooks";
+import { CreateMenuForm } from "types";
 import { convertToBase64 } from "utils";
-
-interface CreateMenuForm {
-  title: string;
-  description: string;
-  image: FileList;
-}
 
 export const Home: React.FC = () => {
   const {
@@ -32,19 +27,28 @@ export const Home: React.FC = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  const onSubmit = handleSubmit(async ({ title, description, image }) => {
-    const imageBase64 = await convertToBase64(image[0]);
+  const onSubmit = handleSubmit(
+    async ({ title, description, footer, image }) => {
+      const data: Parameters<typeof createMenu>[0] = {
+        title,
+        description,
+        footer,
+      };
 
-    createMenu(
-      { title, description, image: imageBase64 },
-      {
+      if (image?.length) {
+        const imageBase64 = await convertToBase64(image[0]);
+
+        data.image = imageBase64;
+      }
+
+      createMenu(data, {
         onSettled: () => {
           closeModal();
           reset();
         },
-      }
-    );
-  });
+      });
+    }
+  );
 
   const handleDeleteMenu = (id: string) => deleteMenu(id);
   const handleEditMenu = (id: string) => navigate(`/edit/${id}`);
@@ -88,14 +92,20 @@ export const Home: React.FC = () => {
             label="Description"
             placeholder="This menu is so cool"
             type="text"
-            {...register("description", { required: true })}
+            {...register("description")}
+          />
+          <Input
+            label="Footer"
+            placeholder=""
+            type="text"
+            {...register("footer")}
           />
           <Input
             className="file-input-bordered file-input w-full max-w-xs"
             label="Avatar"
             type="file"
             accept="image/*"
-            {...register("image", { required: true })}
+            {...register("image")}
           />
           <button className="btn w-full rounded-md" type="submit">
             <Loading loading={isMenuCreating} type="dots">

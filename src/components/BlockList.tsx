@@ -15,9 +15,10 @@ import { Input, Loading, Modal } from "./UI";
 
 interface BlockListProps {
   menuId: string;
+  className?: string;
 }
 
-export const BlockList: React.FC<BlockListProps> = ({ menuId }) => {
+export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
   const {
     data,
     isLoading: isBlocksLoading,
@@ -63,7 +64,7 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId }) => {
 
   return (
     <>
-      <div className="w-full max-w-3xl">
+      <div className={`w-full max-w-3xl ${className}`}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="blocks">
             {(provided) => (

@@ -16,26 +16,32 @@ export const Menu: React.FC = () => {
     queryFn: () => MenuService.getPublic(id as string),
     select: (data) => ({
       ...data,
-      Blocks: data.Blocks.sort((a, b) => a.place - b.place),
+      Blocks: data.Blocks?.sort((a, b) => a.place - b.place),
     }),
   });
 
   return (
     <Loading loading={isLoading} cover>
       <div className="flex flex-col items-center pt-4">
-        <div className="avatar">
-          <div className="w-20 rounded-full">
-            <img src={menu?.imageUrl} alt={menu?.title} />
+        {menu?.imageUrl && (
+          <div className="avatar">
+            <div className="w-20 rounded-full">
+              <img src={menu?.imageUrl || ""} alt={menu?.title} />
+            </div>
           </div>
-        </div>
-        <h2 className="text-xl font-bold">{menu?.title}</h2>
-        <p className="text-md mb-4">{menu?.description}</p>
+        )}
 
-        <div className="w-full max-w-3xl">
+        {menu?.title && <h2 className="text-xl font-bold">{menu.title}</h2>}
+
+        {menu?.description && <p className="text-md">{menu.description}</p>}
+
+        <div className="my-6 w-full max-w-3xl">
           {menu?.Blocks?.map((block) => (
             <Block key={block.id} data={block} />
           ))}
         </div>
+
+        {menu?.footer && <p className="text-md mb-4">{menu.footer}</p>}
       </div>
     </Loading>
   );
