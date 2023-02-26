@@ -2,28 +2,58 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { blockKeys } from "constants/queryKeys";
 import { BlockService } from "services/BlockService";
+import { Block } from "types";
 
 export const useBlocks = (menuId: string) => {
   const queryClient = useQueryClient();
 
+  const queryKey = blockKeys.list(menuId);
+
   const res = useQuery({
-    queryKey: blockKeys.list(menuId),
+    queryKey,
     queryFn: () => BlockService.get(menuId),
   });
 
-  const createMutation = useMutation({
+  const create = useMutation({
     mutationFn: BlockService.create,
     onSettled: () => {
-      queryClient.invalidateQueries(blockKeys.list(menuId));
+      queryClient.invalidateQueries(queryKey);
+    },
+  });
+
+  const reorder = useMutation({
+    mutationFn: BlockService.update,
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previousBlocks = queryClient.getQueryData<Block[]>(queryKey);
+
+      if (previousBlocks) {
+        const newBlocks = previousBlocks.map((block) => {
+          const { place } = variables.find(
+            ({ id }) => id === block.id
+          ) as Block;
+
+          return { ...block, place };
+        });
+
+        queryClient.setQueryData<Block[]>(queryKey, newBlocks);
+      }
+
+      return { previousBlocks };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousBlocks) {
+        queryClient.setQueryData<Block[]>(queryKey, context.previousBlocks);
+      }
     },
   });
 
   // const deleteMutation = useMutation({
   //   mutationFn: MenuService.delete,
   //   onSettled: () => {
-  //     queryClient.invalidateQueries(blockKeys.list(menuId));
+  //     queryClient.invalidateQueries(queryKey);
   //   },
   // });
 
-  return Object.assign(res, { createMutation /* , deleteMutation */ });
+  return Object.assign(res, { create, reorder /* , deleteMutation */ });
 };

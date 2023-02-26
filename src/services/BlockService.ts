@@ -18,4 +18,8 @@ export class BlockService {
       .get<Block[]>("/blocks", { params: { menuId } })
       .then((r) => r.data);
   }
+
+  static async update(updates: Partial<Block>[]) {
+    return api.put<Block[]>("/blocks", { updates }).then((r) => r.data);
+  }
 }

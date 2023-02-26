@@ -42,6 +42,11 @@ export interface MenuPublic extends Menu {
   Blocks: Block[];
 }
 
+export interface CreateBlockForm {
+  text: string;
+  image?: FileList;
+}
+
 export type FlowReturn<AsyncFunction extends (...args: any[]) => Promise<any>> =
   Generator<
     ReturnType<AsyncFunction>,
