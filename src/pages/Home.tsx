@@ -17,6 +17,7 @@ export const Home: React.FC = () => {
     isLoading: isMenusLoading,
     createMutation: { mutate: createMenu, isLoading: isMenuCreating },
     deleteMutation: { mutate: deleteMenu },
+    updateMutation: { mutate: updateMenu },
   } = useMenus();
 
   const navigate = useNavigate();
@@ -50,9 +51,12 @@ export const Home: React.FC = () => {
     }
   );
 
-  const handleDeleteMenu = (id: string) => deleteMenu(id);
-  const handleEditMenu = (id: string) => navigate(`/edit/${id}`);
-  const handleViewMenu = (id: string) => navigate(`/menu/${id}`);
+  const handleEditMenu = (id: string) => () => navigate(`/edit/${id}`);
+  const handleViewMenu = (id: string) => () => navigate(`/menu/${id}`);
+  const handleDeleteMenu = (id: string) => () => deleteMenu(id);
+  const handleTogglePublish = (id: string) => (value: boolean) => {
+    updateMenu({ [id]: { isPublished: value } });
+  };
 
   return (
     <div className="pt-6">
@@ -65,9 +69,10 @@ export const Home: React.FC = () => {
                 <Menu
                   key={menu.id}
                   data={menu}
-                  onEdit={() => handleEditMenu(menu.id)}
-                  onView={() => handleViewMenu(menu.id)}
-                  onDelete={() => handleDeleteMenu(menu.id)}
+                  onEdit={handleEditMenu(menu.id)}
+                  onView={handleViewMenu(menu.id)}
+                  onDelete={handleDeleteMenu(menu.id)}
+                  onTogglePublish={handleTogglePublish(menu.id)}
                 />
               ))}
             <div

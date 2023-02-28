@@ -25,6 +25,7 @@ export interface Menu {
   description: string | null;
   footer: string | null;
   imageUrl: string | null;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -53,6 +54,16 @@ export interface CreateMenuForm {
 export interface CreateBlockForm {
   text: string;
   image?: FileList;
+}
+
+export interface MenusPatch {
+  [id: string]: Partial<
+    Pick<Menu, "title" | "description" | "footer" | "isPublished">
+  >;
+}
+
+export interface BlocksPatch {
+  [id: string]: Partial<Pick<Block, "imageUrl" | "place" | "text">>;
 }
 
 export type FlowReturn<AsyncFunction extends (...args: any[]) => Promise<any>> =

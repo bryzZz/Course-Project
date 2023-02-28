@@ -1,4 +1,4 @@
-import { Menu, MenuPublic, CreateMenuForm } from "types";
+import { Menu, MenuPublic, CreateMenuForm, MenusPatch } from "types";
 
 import { api } from "../http";
 
@@ -17,6 +17,10 @@ export class MenuService {
 
   static async getAll() {
     return api.get<Menu[]>("/menus").then((r) => r.data);
+  }
+
+  static async update(updates: MenusPatch) {
+    return api.put<Menu[]>("/menus", { updates }).then((r) => r.data);
   }
 
   static async delete(id: string) {

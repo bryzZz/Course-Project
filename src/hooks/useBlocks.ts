@@ -29,9 +29,7 @@ export const useBlocks = (menuId: string) => {
 
       if (previousBlocks) {
         const newBlocks = previousBlocks.map((block) => {
-          const { place } = variables.find(
-            ({ id }) => id === block.id
-          ) as Block;
+          const place = variables[block.id].place as number;
 
           return { ...block, place };
         });

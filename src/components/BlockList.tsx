@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 import { Block, StrictModeDroppable as Droppable } from "components";
 import { useBlocks } from "hooks";
-import { CreateBlockForm } from "types";
+import { BlocksPatch, CreateBlockForm } from "types";
 import { convertToBase64, reorder } from "utils";
 
 import { Input, Loading, Modal } from "./UI";
@@ -59,7 +59,15 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
 
     const items = reorder(blocks, source.index, destination.index);
 
-    reorderBlocks(items.map(({ id }, index) => ({ id, place: index })));
+    reorderBlocks(
+      items.reduce((acc, cur, index) => {
+        acc[cur.id] = { place: index };
+
+        return acc;
+      }, {} as BlocksPatch)
+    );
+
+    // reorderBlocks(items.map(({ id }, index) => ({ id, place: index })));
   };
 
   return (
