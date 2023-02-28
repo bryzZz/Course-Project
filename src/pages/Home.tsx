@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 import { Menu } from "components";
 import { Input, Loading, Modal } from "components/UI";
@@ -76,7 +77,10 @@ export const Home: React.FC = () => {
                 />
               ))}
             <div
-              className="basis-64 cursor-pointer rounded-2xl border-2 border-dashed border-base-content border-opacity-30 pt-16 text-center text-lg hover:border-opacity-60"
+              className={twMerge(
+                "basis-64 cursor-pointer rounded-2xl pt-16 text-center text-lg",
+                "border-2 border-dashed border-base-content border-opacity-30 hover:border-opacity-60"
+              )}
               onClick={openModal}
             >
               Create New Menu

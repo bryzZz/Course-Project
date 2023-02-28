@@ -8,17 +8,18 @@ interface InputProps
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  label: string;
+  label?: string;
   containerClassName?: string;
+  ghost?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, containerClassName, className, ...other }, ref) => {
+  ({ label, containerClassName, className, ghost, ...other }, ref) => {
     if (other.type === "checkbox") {
       return (
         <div className={twMerge("form-control w-full", containerClassName)}>
           <label className="label cursor-pointer justify-start gap-2 p-0">
-            <span className="label-text">{label}</span>
+            {label && <span className="label-text">{label}</span>}
             <input
               className={twMerge("toggle-primary toggle", className)}
               ref={ref}
@@ -30,12 +31,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     }
     return (
       <div className={twMerge("form-control w-full", containerClassName)}>
-        <label className="label">
-          <span className="label-text">{label}</span>
-        </label>
+        {label && (
+          <label className="label">
+            <span className="label-text">{label}</span>
+          </label>
+        )}
         <input
           className={twMerge(
             "input-bordered input w-full focus:border-primary focus:outline-none",
+            ghost && "border-none bg-transparent outline-none",
             className
           )}
           ref={ref}

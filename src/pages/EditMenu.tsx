@@ -1,33 +1,65 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useMemo } from "react";
 
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
-import { useForm } from "react-hook-form";
-import { useQuery } from "react-query";
+import debounce from "lodash.debounce";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 
-import { BlockList, StrictModeDroppable } from "components";
-import { Input, Loading, Modal } from "components/UI";
+import { BlockList } from "components";
+import { Input, Loading } from "components/UI";
 import { menuKeys } from "constants/queryKeys";
-import { useBlocks } from "hooks";
 import { MenuService } from "services/MenuService";
-import { convertToBase64 } from "utils";
 
 export const EditMenu: React.FC = () => {
   const id = useParams().id as string;
+
+  const queryClient = useQueryClient();
 
   const { data: menu, isLoading } = useQuery({
     queryKey: menuKeys.detail(id as string),
     queryFn: () => MenuService.get(id as string),
   });
 
-  // const [blocks, setBlocks] = useState(blocksInitial || []);
+  const update = useMutation({
+    mutationFn: MenuService.update,
+    onSettled: () => {
+      queryClient.invalidateQueries(menuKeys.detail(id as string));
+    },
+  });
 
-  // useEffect(() => {
-  //   setBlocks(blocksInitial || []);
-  // }, [blocksInitial]);
+  const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    update.mutate({ [id]: { title: e.target.value } });
+  };
+  const handleChangeDescription = (e: ChangeEvent<HTMLInputElement>) => {
+    update.mutate({ [id]: { description: e.target.value } });
+  };
+  const handleChangeFooter = (e: ChangeEvent<HTMLInputElement>) => {
+    update.mutate({ [id]: { footer: e.target.value } });
+  };
+
+  const debouncedChangeTitle = useMemo(
+    () => debounce(handleChangeTitle, 500),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  const debouncedChangeDescription = useMemo(
+    () => debounce(handleChangeDescription, 500),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  const debouncedChangeFooter = useMemo(
+    () => debounce(handleChangeFooter, 500),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedChangeTitle.cancel();
+    };
+  }, []);
 
   return (
     <Loading loading={isLoading} cover>
@@ -40,13 +72,37 @@ export const EditMenu: React.FC = () => {
           </div>
         )}
 
-        {menu?.title && <h2 className="text-xl font-bold">{menu.title}</h2>}
+        <Input
+          className="h-auto text-center text-xl font-bold"
+          containerClassName="w-auto"
+          type="text"
+          ghost
+          defaultValue={menu?.title || ""}
+          onChange={debouncedChangeTitle}
+          placeholder="Title"
+        />
 
-        {menu?.description && <p className="text-md">{menu.description}</p>}
+        <Input
+          className="text-md h-auto text-center"
+          containerClassName="w-auto"
+          type="text"
+          ghost
+          defaultValue={menu?.description || ""}
+          onChange={debouncedChangeDescription}
+          placeholder="Description"
+        />
 
-        <BlockList menuId={id} className={menu?.footer ? "my-6" : ""} />
+        <BlockList menuId={id} className="my-6" />
 
-        {menu?.footer && <p className="text-md mb-4">{menu.footer}</p>}
+        <Input
+          className="text-md h-auto text-center"
+          containerClassName="w-auto"
+          type="text"
+          ghost
+          defaultValue={menu?.footer || ""}
+          onChange={debouncedChangeFooter}
+          placeholder="Footer"
+        />
       </div>
     </Loading>
   );
