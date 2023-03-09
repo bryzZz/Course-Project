@@ -6,37 +6,37 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
 
 import { Loading } from "components/UI";
-import { RootStoreContextProvider } from "context/RootStoreContext";
+import { useUserStore } from "hooks";
 import { AuthorizedRoutes, UnauthorizedRoutes } from "routes";
-import { RootStore } from "store/RootStore";
 
-const rootStore = new RootStore();
 const queryClient = new QueryClient();
 
 export const App: React.FC = observer(() => {
-  const { isAuth, status } = rootStore.userStore;
+  const { isAuth, status, checkAuth } = useUserStore((state) => ({
+    isAuth: state.isAuth,
+    status: state.status,
+    checkAuth: state.checkAuth,
+  }));
 
   const Routes = isAuth ? AuthorizedRoutes : UnauthorizedRoutes;
 
   useEffect(() => {
     const controller = new AbortController();
-    rootStore.userStore.checkAuth(controller.signal);
+    checkAuth(controller.signal);
 
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [checkAuth]);
 
   return (
     <BrowserRouter>
-      <RootStoreContextProvider value={rootStore}>
-        <QueryClientProvider client={queryClient}>
-          <Loading loading={status === "init"} cover>
-            <Routes />
-          </Loading>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </RootStoreContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <Loading loading={status === "init"} cover>
+          <Routes />
+        </Loading>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </BrowserRouter>
   );
 });

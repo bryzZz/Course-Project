@@ -5,10 +5,13 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { BsPersonCircle, BsChevronDown } from "react-icons/bs";
 
-import { useStore } from "hooks";
+import { useUserStore } from "hooks";
 
 export const Header: React.FC = observer(() => {
-  const { user, status, logout } = useStore((store) => store.userStore);
+  const { user, logout } = useUserStore((state) => ({
+    user: state.user,
+    logout: state.logout,
+  }));
 
   return (
     <header className="h-14 bg-base-100 shadow">

@@ -59,6 +59,7 @@ export const EditMenu: React.FC = () => {
     return () => {
       debouncedChangeTitle.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -66,8 +66,6 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
         return acc;
       }, {} as BlocksPatch)
     );
-
-    // reorderBlocks(items.map(({ id }, index) => ({ id, place: index })));
   };
 
   return (

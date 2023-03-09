@@ -12,8 +12,6 @@
     "axios": "^1.3.3",
     "daisyui": "^2.50.2",
     "lodash.debounce": "^4.0.8",
-    "mobx": "^6.8.0",
-    "mobx-react-lite": "^3.4.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
@@ -21,7 +19,8 @@
     "react-icons": "^4.7.1",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.8.1",
-    "tailwind-merge": "^1.10.0"
+    "tailwind-merge": "^1.10.0",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",

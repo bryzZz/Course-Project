@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 import { Input, Loading } from "components/UI";
-import { useStore } from "hooks";
+import { useUserStore } from "hooks";
 import { RegisterData } from "types";
 
 interface RegisterForm extends RegisterData {
@@ -14,13 +14,16 @@ interface RegisterForm extends RegisterData {
 }
 
 export const Register: React.FC = observer(() => {
-  const { userStore } = useStore();
+  const { registerUser, status } = useUserStore((state) => ({
+    registerUser: state.register,
+    status: state.status,
+  }));
 
   const { register, handleSubmit } = useForm<RegisterForm>();
 
   const onSubmit = handleSubmit((data) => {
     if (data.password === data.confirmPassword) {
-      userStore.register(data);
+      registerUser(data);
     }
   });
 
@@ -50,7 +53,7 @@ export const Register: React.FC = observer(() => {
             {...register("confirmPassword", { required: true })}
           />
           <button className="btn w-full rounded-full" type="submit">
-            <Loading loading={userStore.status === "loading"} type="dots">
+            <Loading loading={status === "loading"} type="dots">
               Sign Up
             </Loading>
           </button>

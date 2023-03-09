@@ -6,11 +6,14 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 import { Input, Loading } from "components/UI";
-import { useStore } from "hooks";
+import { useUserStore } from "hooks";
 import { LoginData } from "types";
 
 export const Login: React.FC = observer(() => {
-  const { login, status } = useStore((store) => store.userStore);
+  const { login, status } = useUserStore((state) => ({
+    login: state.login,
+    status: state.status,
+  }));
 
   const { register, handleSubmit } = useForm<LoginData>();
 

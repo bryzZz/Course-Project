@@ -39,7 +39,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           className={twMerge(
             "input-bordered input w-full focus:border-primary focus:outline-none",
-            ghost && "border-none bg-transparent outline-none",
+            ghost && "border-transparent bg-transparent",
             className
           )}
           ref={ref}
