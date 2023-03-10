@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
 
-import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
@@ -13,7 +12,7 @@ interface RegisterForm extends RegisterData {
   confirmPassword: string;
 }
 
-export const Register: React.FC = observer(() => {
+export const Register: React.FC = () => {
   const { registerUser, status } = useUserStore((state) => ({
     registerUser: state.register,
     status: state.status,
@@ -64,4 +63,4 @@ export const Register: React.FC = observer(() => {
       </Link>
     </div>
   );
-});
+};

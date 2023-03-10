@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-import { observer } from "mobx-react-lite";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
@@ -11,7 +10,7 @@ import { AuthorizedRoutes, UnauthorizedRoutes } from "routes";
 
 const queryClient = new QueryClient();
 
-export const App: React.FC = observer(() => {
+export const App: React.FC = () => {
   const { isAuth, status, checkAuth } = useUserStore((state) => ({
     isAuth: state.isAuth,
     status: state.status,
@@ -39,4 +38,4 @@ export const App: React.FC = observer(() => {
       </QueryClientProvider>
     </BrowserRouter>
   );
-});
+};

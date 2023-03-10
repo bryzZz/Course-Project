@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from "react";
 
-import { computed } from "mobx";
 import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
 
@@ -26,7 +25,7 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
     reorder: { mutate: reorderBlocks },
   } = useBlocks(menuId);
 
-  const blocks = computed(() => data?.sort((a, b) => a.place - b.place)).get();
+  const blocks = data?.sort((a, b) => a.place - b.place);
 
   const { register, handleSubmit, reset } = useForm<CreateBlockForm>();
 

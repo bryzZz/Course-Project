@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
 
-import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
@@ -9,7 +8,7 @@ import { Input, Loading } from "components/UI";
 import { useUserStore } from "hooks";
 import { LoginData } from "types";
 
-export const Login: React.FC = observer(() => {
+export const Login: React.FC = () => {
   const { login, status } = useUserStore((state) => ({
     login: state.login,
     status: state.status,
@@ -48,4 +47,4 @@ export const Login: React.FC = observer(() => {
       </Link>
     </div>
   );
-});
+};

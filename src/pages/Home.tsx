@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from "react";
 
+import QRCode from "qrcode";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
@@ -9,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { Menu } from "components";
 import { Input, Loading, Modal } from "components/UI";
 import { useMenus } from "hooks";
-import { CreateMenuForm } from "types";
+import { CreateMenuForm, Menu as IMenu } from "types";
 import { convertToBase64 } from "utils";
 
 export const Home: React.FC = () => {
@@ -55,6 +56,17 @@ export const Home: React.FC = () => {
   const handleEditMenu = (id: string) => () => navigate(`/edit/${id}`);
   const handleViewMenu = (id: string) => () => navigate(`/menu/${id}`);
   const handleDeleteMenu = (id: string) => () => deleteMenu(id);
+  const handleRequestQr = (menu: IMenu) => async () => {
+    const menuUrl = `${window.location.origin}/menu/${menu.id}`;
+
+    const qrUrl = await QRCode.toDataURL(menuUrl, { width: 360 });
+
+    const downloadLink = document.createElement("a");
+    downloadLink.setAttribute("download", `${menu.title}-qr.png`);
+    downloadLink.setAttribute("href", qrUrl);
+
+    downloadLink.click();
+  };
   const handleTogglePublish = (id: string) => (value: boolean) => {
     updateMenu({ [id]: { isPublished: value } });
   };
@@ -70,6 +82,7 @@ export const Home: React.FC = () => {
                 <Menu
                   key={menu.id}
                   data={menu}
+                  onRequestQr={handleRequestQr(menu)}
                   onEdit={handleEditMenu(menu.id)}
                   onView={handleViewMenu(menu.id)}
                   onDelete={handleDeleteMenu(menu.id)}

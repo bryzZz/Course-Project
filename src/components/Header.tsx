@@ -2,12 +2,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
 
-import { observer } from "mobx-react-lite";
 import { BsPersonCircle, BsChevronDown } from "react-icons/bs";
 
 import { useUserStore } from "hooks";
 
-export const Header: React.FC = observer(() => {
+export const Header: React.FC = () => {
   const { user, logout } = useUserStore((state) => ({
     user: state.user,
     logout: state.logout,
@@ -42,4 +41,4 @@ export const Header: React.FC = observer(() => {
       </div>
     </header>
   );
-});
+};

@@ -1,8 +1,8 @@
 import React from "react";
 
 import { FaEye, FaPen } from "react-icons/fa";
-import { FiTrash, FiEyeOff } from "react-icons/fi";
-import { RiCameraOffLine } from "react-icons/ri";
+import { FiTrash } from "react-icons/fi";
+import { RiCameraOffLine, RiQrCodeLine } from "react-icons/ri";
 
 import type { Menu as IMenu } from "types";
 
@@ -10,6 +10,7 @@ import { Input } from "./UI";
 
 interface MenuProps {
   data: IMenu;
+  onRequestQr: () => void;
   onDelete: () => void;
   onView: () => void;
   onEdit: () => void;
@@ -18,6 +19,7 @@ interface MenuProps {
 
 export const Menu: React.FC<MenuProps> = ({
   data,
+  onRequestQr,
   onView,
   onDelete,
   onEdit,
@@ -71,11 +73,18 @@ export const Menu: React.FC<MenuProps> = ({
           <FaEye />
         </button>
         <button
-          className=" p-4 text-base-content text-opacity-60 hover:bg-base-300"
+          className="p-4 text-base-content text-opacity-60 hover:bg-base-300"
           onClick={onEdit}
           type="button"
         >
           <FaPen />
+        </button>
+        <button
+          className="p-4 text-base-content text-opacity-60 hover:bg-base-300"
+          onClick={onRequestQr}
+          type="button"
+        >
+          <RiQrCodeLine />
         </button>
       </div>
     </div>
