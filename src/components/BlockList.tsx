@@ -2,15 +2,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from "react";
 
-import { DragDropContext, Draggable, DropResult } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 
-import { Block, StrictModeDroppable as Droppable } from "components";
+import { Block } from "components";
 import { useBlocks } from "hooks";
-import { BlocksPatch, CreateBlockForm } from "types";
-import { convertToBase64, reorder } from "utils";
+import { Block as IBlock, BlocksPatch, CreateBlockForm } from "types";
+import { convertToBase64 } from "utils";
 
-import { Input, Loading, Modal } from "./UI";
+import { CreateBlockModal } from "./CreateBlockModal";
+import { DraggableList } from "./UI";
 
 interface BlockListProps {
   menuId: string;
@@ -19,21 +20,22 @@ interface BlockListProps {
 
 export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
   const {
-    data,
+    data: blocks,
     isLoading: isBlocksLoading,
     create: { mutate: createBlock, isLoading: isBlockCreating },
     reorder: { mutate: reorderBlocks },
   } = useBlocks(menuId);
 
-  const blocks = data?.sort((a, b) => a.place - b.place);
+  const sortedBlocks = blocks?.sort((a, b) => a.place - b.place);
 
-  const { register, handleSubmit, reset } = useForm<CreateBlockForm>();
+  const methods = useForm<CreateBlockForm>();
+  const { handleSubmit, reset } = methods;
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  const onSubmit = handleSubmit(async ({ text, image }) => {
+  const onCreateBlock = handleSubmit(async ({ text, image }) => {
     const data: Parameters<typeof createBlock>[0] = {
       menuId,
       text,
@@ -53,13 +55,9 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
     });
   });
 
-  const handleDragEnd = ({ source, destination }: DropResult) => {
-    if (!destination || !blocks) return;
-
-    const items = reorder(blocks, source.index, destination.index);
-
+  const handleReorder = (reorderedBlocks: IBlock[]) => {
     reorderBlocks(
-      items.reduce((acc, cur, index) => {
+      reorderedBlocks.reduce((acc, cur, index) => {
         acc[cur.id] = { place: index };
 
         return acc;
@@ -69,61 +67,33 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
 
   return (
     <>
-      <div className={`w-full max-w-3xl ${className}`}>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="blocks">
-            {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {blocks?.map((block, index) => (
-                  <Draggable
-                    key={block.id}
-                    draggableId={block.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <Block
-                        data={block}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      />
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+      <div className={twMerge("w-full max-w-3xl", className)}>
+        <DraggableList
+          items={sortedBlocks ?? []}
+          droppableId="blocks"
+          onReorder={handleReorder}
+          render={(block, ref, p1, p2) => (
+            <Block data={block} ref={ref} {...p1} {...p2} />
+          )}
+        />
         <div
-          className="cursor-pointer rounded-md border-2 border-dashed border-base-content border-opacity-30 py-6 text-center text-lg text-opacity-30 hover:border-opacity-60 active:border-primary active:text-primary"
+          className={twMerge(
+            "cursor-pointer rounded-md py-6 text-center text-lg text-opacity-30",
+            "border-2 border-dashed border-base-content border-opacity-30",
+            "hover:border-opacity-60 active:border-primary active:text-primary"
+          )}
           onClick={openModal}
         >
           Add New Dish
         </div>
       </div>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} title="Create block">
-        <form className="flex flex-col gap-4" onSubmit={onSubmit}>
-          <Input
-            label="Title"
-            type="text"
-            placeholder="Pepperoni pizza"
-            {...register("text", { required: true })}
-          />
-          <Input
-            className="file-input-bordered file-input w-full max-w-xs focus:outline-none"
-            label="Image"
-            type="file"
-            accept="image/*"
-            {...register("image")}
-          />
-          <button className="btn w-full rounded-full" type="submit">
-            <Loading loading={isBlockCreating} type="dots">
-              Create
-            </Loading>
-          </button>
-        </form>
-      </Modal>
+      <CreateBlockModal
+        isOpen={modalIsOpen}
+        onClose={closeModal}
+        methods={methods}
+        onCreate={onCreateBlock}
+        isCreating={isBlockCreating}
+      />
     </>
   );
 };

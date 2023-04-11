@@ -1,14 +1,10 @@
-import React, { forwardRef } from "react";
+import { ComponentProps, forwardRef } from "react";
 
 import { twMerge } from "tailwind-merge";
 
 import { Block as IBlock } from "types";
 
-interface BlockProps
-  extends React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  > {
+interface BlockProps extends ComponentProps<"div"> {
   data: IBlock;
   type?: "square" | "rectangle";
 }
