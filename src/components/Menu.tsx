@@ -29,20 +29,18 @@ export const Menu: React.FC<MenuProps> = ({
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div className="flex basis-64 flex-col justify-between gap-6 rounded-lg bg-base-100 pt-6 shadow">
+    <div className="flex flex-col justify-between gap-6 rounded-lg bg-base-100 pt-6 shadow">
       <div className="px-6">
         <div className="flex items-start justify-between">
-          {imageUrl ? (
-            <div className="avatar">
-              <div className="w-12 rounded-full">
+          <div className="placeholder avatar">
+            <div className="w-12 rounded-full bg-neutral-focus text-base-content text-opacity-50">
+              {imageUrl ? (
                 <img src={imageUrl} alt={title} />
-              </div>
+              ) : (
+                <RiCameraOffLine className="h-6 w-6" />
+              )}
             </div>
-          ) : (
-            <div className="grid h-12 w-12 place-items-center text-base-content text-opacity-50">
-              <RiCameraOffLine className="h-6 w-6" />
-            </div>
-          )}
+          </div>
         </div>
         <h3 className="text-lg">{title}</h3>
         <p className="text-xs">{description}</p>

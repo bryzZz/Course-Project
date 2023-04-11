@@ -76,7 +76,7 @@ export const Home: React.FC = () => {
       <div className="mx-auto w-full max-w-4xl">
         <h2 className="mb-4 text-xl font-bold">Menus</h2>
         <Loading loading={isMenusLoading}>
-          <div className="flex flex-wrap gap-6">
+          <div className="grid auto-rows-[minmax(100px,_1fr)] grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-3">
             {menus &&
               menus.map((menu) => (
                 <Menu
@@ -91,7 +91,7 @@ export const Home: React.FC = () => {
               ))}
             <div
               className={twMerge(
-                "basis-64 cursor-pointer rounded-2xl pt-16 text-center text-lg",
+                "grid cursor-pointer place-items-center rounded-2xl text-center text-xl",
                 "border-2 border-dashed border-base-content border-opacity-30 hover:border-opacity-60"
               )}
               onClick={openModal}

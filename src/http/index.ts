@@ -3,11 +3,9 @@ import axios from "axios";
 
 import { AuthResponse } from "types";
 
-export const API_URL = "http://localhost:8000/api/v1";
-
 export const api = axios.create({
   withCredentials: true,
-  baseURL: API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 api.interceptors.request.use((config) => {
@@ -33,9 +31,12 @@ api.interceptors.response.use(
     ) {
       originalRequest._isRetry = true;
       try {
-        const res = await axios.get<AuthResponse>(`${API_URL}/refresh`, {
-          withCredentials: true,
-        });
+        const res = await axios.get<AuthResponse>(
+          `${import.meta.env.VITE_API_URL}/refresh`,
+          {
+            withCredentials: true,
+          }
+        );
 
         localStorage.setItem("token", res.data.accessToken);
 
