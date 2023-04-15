@@ -1,15 +1,9 @@
-import { Block, BlocksPatch } from "types";
+import { Block, BlocksPatch, CreateBlockParams } from "types";
 
 import { api } from "../http";
 
-interface CreateParams {
-  menuId: string;
-  text: string;
-  image?: string;
-}
-
 export class BlockService {
-  static async create(args: CreateParams) {
+  static async create(args: CreateBlockParams) {
     return api.post<Block>("/blocks", args);
   }
 

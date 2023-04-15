@@ -2,14 +2,14 @@ import React from "react";
 
 import { UseFormReturn } from "react-hook-form";
 
-import { CreateBlockForm } from "types";
+import { CreateDishForm } from "types";
 
-import { Input, Loading, Modal } from "./UI";
+import { Input, Loading, Modal, Textarea } from "./UI";
 
 interface CreateBlockModalProps {
   isOpen: boolean;
   onClose: () => void;
-  methods: UseFormReturn<CreateBlockForm>;
+  methods: UseFormReturn<CreateDishForm>;
   onCreate: () => void;
   isCreating: boolean;
 }
@@ -30,15 +30,24 @@ export const CreateBlockModal: React.FC<CreateBlockModalProps> = ({
           label="Title"
           type="text"
           placeholder="Pepperoni pizza"
-          {...register("text", { required: true })}
+          {...register("name", { required: true })}
         />
         <Input
           className="file-input-bordered file-input w-full max-w-xs focus:outline-none"
           label="Image"
           type="file"
           accept="image/*"
-          {...register("image")}
+          {...register("image", { required: true })}
         />
+        <Textarea
+          label="Description"
+          placeholder="socages"
+          rows={10}
+          wrap="hard"
+          maxLength={300}
+          {...register("description", { required: true })}
+        />
+
         <button className="btn w-full rounded-full" type="submit">
           <Loading loading={isCreating} type="dots">
             Create

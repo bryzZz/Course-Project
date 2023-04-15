@@ -30,14 +30,40 @@ export interface Menu {
   updatedAt: string;
 }
 
-export interface Block {
+interface BlockShared {
   id: string;
-  text: string;
   place: number;
-  imageUrl?: string;
   menuId: string;
   createdAt: string;
   updatedAt: string;
+}
+
+interface DishBlock extends BlockShared {
+  type: BlockVariant.DISH;
+  data: Dish;
+}
+interface SeparatorBlock extends BlockShared {
+  type: BlockVariant.SEPARATOR;
+  data: Separator;
+}
+
+export type Block = DishBlock | SeparatorBlock;
+
+export enum BlockVariant {
+  DISH = "DISH",
+  SEPARATOR = "SEPARATOR",
+}
+
+export interface Dish {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  description?: string;
+}
+
+export interface Separator {
+  id: string;
+  text: string;
 }
 
 export interface MenuPublic extends Menu {
@@ -51,9 +77,16 @@ export interface CreateMenuForm {
   image?: FileList;
 }
 
-export interface CreateBlockForm {
-  text: string;
-  image?: FileList;
+export interface CreateDishForm {
+  name: string;
+  image: FileList;
+  description: string;
+}
+
+export interface CreateBlockParams extends Omit<CreateDishForm, "image"> {
+  type: "DISH" | "SEPARATOR";
+  menuId: string;
+  image?: string;
 }
 
 export interface MenusPatch {
@@ -63,7 +96,7 @@ export interface MenusPatch {
 }
 
 export interface BlocksPatch {
-  [id: string]: Partial<Pick<Block, "imageUrl" | "place" | "text">>;
+  [id: string]: Partial<Pick<Block, "place">>;
 }
 
 export type FlowReturn<AsyncFunction extends (...args: any[]) => Promise<any>> =

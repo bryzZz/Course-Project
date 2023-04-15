@@ -1,13 +1,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { forwardRef } from "react";
+import { ComponentProps, forwardRef } from "react";
 
 import { twMerge } from "tailwind-merge";
 
-interface InputProps
-  extends React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  > {
+interface InputProps extends ComponentProps<"input"> {
   label?: string;
   containerClassName?: string;
   ghost?: boolean;

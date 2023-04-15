@@ -7,7 +7,12 @@ import { twMerge } from "tailwind-merge";
 
 import { Block } from "components";
 import { useBlocks } from "hooks";
-import { Block as IBlock, BlocksPatch, CreateBlockForm } from "types";
+import {
+  Block as IBlock,
+  BlocksPatch,
+  CreateDishForm,
+  CreateBlockParams,
+} from "types";
 import { convertToBase64 } from "utils";
 
 import { CreateBlockModal } from "./CreateBlockModal";
@@ -28,24 +33,21 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
 
   const sortedBlocks = blocks?.sort((a, b) => a.place - b.place);
 
-  const methods = useForm<CreateBlockForm>();
+  const methods = useForm<CreateDishForm>();
   const { handleSubmit, reset } = methods;
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  const onCreateBlock = handleSubmit(async ({ text, image }) => {
-    const data: Parameters<typeof createBlock>[0] = {
+  const onCreateBlock = handleSubmit(async ({ name, image, description }) => {
+    const data: CreateBlockParams = {
+      type: "DISH",
       menuId,
-      text,
+      name,
+      description,
+      image: await convertToBase64(image[0]),
     };
-
-    if (image?.length) {
-      const imageBase64 = await convertToBase64(image[0]);
-
-      data.image = imageBase64;
-    }
 
     createBlock(data, {
       onSettled: () => {
@@ -84,7 +86,7 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
           )}
           onClick={openModal}
         >
-          Add New Dish
+          Add New Block
         </div>
       </div>
       <CreateBlockModal
