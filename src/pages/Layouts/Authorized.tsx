@@ -6,7 +6,7 @@ import { Header } from "components";
 
 export const Authorized: React.FC = () => {
   return (
-    <div className="h-screen bg-base-300">
+    <div className="h-screen">
       <Header />
       <div className="container mx-auto h-[calc(100vh-3.5rem)] px-4">
         <Outlet />

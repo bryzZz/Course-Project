@@ -67,7 +67,7 @@ export interface Separator {
 }
 
 export interface MenuPublic extends Menu {
-  Blocks: Block[];
+  blocks: Block[];
 }
 
 export interface CreateMenuForm {
@@ -83,11 +83,23 @@ export interface CreateDishForm {
   description: string;
 }
 
-export interface CreateBlockParams extends Omit<CreateDishForm, "image"> {
-  type: "DISH" | "SEPARATOR";
-  menuId: string;
-  image?: string;
+export interface CreateSeparatorForm {
+  text: string;
 }
+
+export interface CreateDishParams {
+  menuId: string;
+  type: BlockVariant.DISH;
+  data: Omit<CreateDishForm, "image"> & { image?: string };
+}
+
+export interface CreateSeparatorParams {
+  menuId: string;
+  type: BlockVariant.SEPARATOR;
+  data: CreateSeparatorForm;
+}
+
+export type CreateBlockParams = CreateDishParams | CreateSeparatorParams;
 
 export interface MenusPatch {
   [id: string]: Partial<
@@ -99,6 +111,7 @@ export interface BlocksPatch {
   [id: string]: Partial<Pick<Block, "place">>;
 }
 
+// basic
 export type FlowReturn<AsyncFunction extends (...args: any[]) => Promise<any>> =
   Generator<
     ReturnType<AsyncFunction>,

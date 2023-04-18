@@ -12,6 +12,8 @@ import {
   BlocksPatch,
   CreateDishForm,
   CreateBlockParams,
+  CreateSeparatorForm,
+  BlockVariant,
 } from "types";
 import { convertToBase64 } from "utils";
 
@@ -33,26 +35,42 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
 
   const sortedBlocks = blocks?.sort((a, b) => a.place - b.place);
 
-  const methods = useForm<CreateDishForm>();
-  const { handleSubmit, reset } = methods;
+  const dishMethods = useForm<CreateDishForm>();
+  const separatorMethods = useForm<CreateSeparatorForm>();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  const onCreateBlock = handleSubmit(async ({ name, image, description }) => {
-    const data: CreateBlockParams = {
-      type: "DISH",
+  const onCreateDish = dishMethods.handleSubmit(async (data) => {
+    const res: CreateBlockParams = {
+      type: BlockVariant.DISH,
       menuId,
-      name,
-      description,
-      image: await convertToBase64(image[0]),
+      data: {
+        ...data,
+        image: await convertToBase64(data.image[0]),
+      },
     };
 
-    createBlock(data, {
+    createBlock(res, {
       onSettled: () => {
         closeModal();
-        reset();
+        dishMethods.reset();
+      },
+    });
+  });
+
+  const onCreateSeparator = separatorMethods.handleSubmit(async (data) => {
+    const res: CreateBlockParams = {
+      type: BlockVariant.SEPARATOR,
+      menuId,
+      data,
+    };
+
+    createBlock(res, {
+      onSettled: () => {
+        closeModal();
+        separatorMethods.reset();
       },
     });
   });
@@ -91,10 +109,12 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
       </div>
       <CreateBlockModal
         isOpen={modalIsOpen}
-        onClose={closeModal}
-        methods={methods}
-        onCreate={onCreateBlock}
         isCreating={isBlockCreating}
+        onClose={closeModal}
+        dishMethods={dishMethods}
+        onCreateDish={onCreateDish}
+        separatorMethods={separatorMethods}
+        onCreateSeparator={onCreateSeparator}
       />
     </>
   );

@@ -16,13 +16,13 @@ export const Menu: React.FC = () => {
     queryFn: () => MenuService.getPublic(id as string),
     select: (data) => ({
       ...data,
-      Blocks: data.Blocks?.sort((a, b) => a.place - b.place),
+      blocks: data.blocks?.sort((a, b) => a.place - b.place),
     }),
   });
 
   return (
     <Loading loading={isLoading} cover>
-      <div className="flex flex-col items-center pt-4">
+      <div className="flex h-screen flex-col items-center pt-4">
         {menu?.imageUrl && (
           <div className="avatar">
             <div className="w-20 rounded-full">
@@ -36,8 +36,12 @@ export const Menu: React.FC = () => {
         {menu?.description && <p className="text-md">{menu.description}</p>}
 
         <div className="my-6 w-full max-w-3xl">
-          {menu?.Blocks?.map((block) => (
-            <Block key={block.id} data={block} />
+          {menu?.blocks?.map((block) => (
+            <Block
+              key={block.id}
+              separatorClassName="hover:bg-transparent"
+              data={block}
+            />
           ))}
         </div>
 
