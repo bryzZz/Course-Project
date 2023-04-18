@@ -23,7 +23,6 @@ export default defineConfig(({ command }) => ({
       routes: path.resolve(__dirname, "./src/routes"),
       context: path.resolve(__dirname, "./src/context"),
       utils: path.resolve(__dirname, "./src/utils"),
-      store: path.resolve(__dirname, "./src/store"),
     },
   },
 }));

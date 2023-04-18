@@ -110,11 +110,3 @@ export interface MenusPatch {
 export interface BlocksPatch {
   [id: string]: Partial<Pick<Block, "place">>;
 }
-
-// basic
-export type FlowReturn<AsyncFunction extends (...args: any[]) => Promise<any>> =
-  Generator<
-    ReturnType<AsyncFunction>,
-    void,
-    Awaited<ReturnType<AsyncFunction>>
-  >;
