@@ -2,8 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-base-300;
+@layer components {
+  .container-main {
+    @apply container;
+    @apply mx-auto;
+    @apply px-4;
   }
 }

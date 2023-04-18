@@ -4,7 +4,6 @@ import React, { useState } from "react";
 
 import QRCode from "qrcode";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import { Menu } from "components";
@@ -22,39 +21,29 @@ export const Home: React.FC = () => {
     updateMutation: { mutate: updateMenu },
   } = useMenus();
 
-  const navigate = useNavigate();
-
   const { register, handleSubmit, reset } = useForm<CreateMenuForm>();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  const onSubmit = handleSubmit(
-    async ({ title, description, footer, image }) => {
-      const data: Parameters<typeof createMenu>[0] = {
-        title,
-        description,
-        footer,
-      };
+  const onSubmit = handleSubmit(async ({ image, ...other }) => {
+    const data: Parameters<typeof createMenu>[0] = other;
 
-      if (image?.length) {
-        const imageBase64 = await convertToBase64(image[0]);
+    if (image?.length) {
+      const imageBase64 = await convertToBase64(image[0]);
 
-        data.image = imageBase64;
-      }
-
-      createMenu(data, {
-        onSettled: () => {
-          closeModal();
-          reset();
-        },
-      });
+      data.image = imageBase64;
     }
-  );
 
-  const handleEditMenu = (id: string) => () => navigate(`/edit/${id}`);
-  const handleViewMenu = (id: string) => () => navigate(`/menu/${id}`);
+    createMenu(data, {
+      onSettled: () => {
+        closeModal();
+        reset();
+      },
+    });
+  });
+
   const handleDeleteMenu = (id: string) => () => deleteMenu(id);
   const handleRequestQr = (menu: IMenu) => async () => {
     const menuUrl = `${window.location.origin}/menu/${menu.id}`;
@@ -72,23 +61,22 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="pt-6">
+    <div className="container-main pt-6">
       <div className="mx-auto w-full max-w-4xl">
         <h2 className="mb-4 text-xl font-bold">Menus</h2>
         <Loading loading={isMenusLoading}>
           <div className="grid auto-rows-[minmax(100px,_1fr)] grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-3">
-            {menus &&
-              menus.map((menu) => (
-                <Menu
-                  key={menu.id}
-                  data={menu}
-                  onRequestQr={handleRequestQr(menu)}
-                  onEdit={handleEditMenu(menu.id)}
-                  onView={handleViewMenu(menu.id)}
-                  onDelete={handleDeleteMenu(menu.id)}
-                  onTogglePublish={handleTogglePublish(menu.id)}
-                />
-              ))}
+            {menus?.map((menu) => (
+              <Menu
+                key={menu.id}
+                data={menu}
+                onRequestQr={handleRequestQr(menu)}
+                editUrl={`/edit/${menu.id}`}
+                viewUrl={`/menu/${menu.id}`}
+                onDelete={handleDeleteMenu(menu.id)}
+                onTogglePublish={handleTogglePublish(menu.id)}
+              />
+            ))}
             <div
               className={twMerge(
                 "grid cursor-pointer place-items-center rounded-2xl text-center text-xl",

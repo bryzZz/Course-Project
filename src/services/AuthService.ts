@@ -1,4 +1,4 @@
-import { AuthResponse } from "types";
+import { AuthResponse } from "types/api";
 
 import { api } from "../http";
 

@@ -1,4 +1,5 @@
-import { Menu, MenuPublic, CreateMenuForm, MenusPatch } from "types";
+import { Menu, MenuPublic, CreateMenuForm } from "types";
+import { MenusPatch } from "types/api";
 
 import { api } from "../http";
 

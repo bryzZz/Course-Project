@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 import { AuthService } from "services/AuthService";
-import { LoginData, RegisterData, User } from "types";
+import { LoginData, RegisterData, User } from "types/api";
 import { requestRefresh } from "utils";
 
 interface UserState {

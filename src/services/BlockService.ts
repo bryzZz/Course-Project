@@ -1,4 +1,5 @@
-import { Block, BlocksPatch, CreateBlockParams } from "types";
+import { Block } from "types";
+import { CreateBlockParams, BlocksPatch } from "types/api";
 
 import { api } from "../http";
 

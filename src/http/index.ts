@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import axios from "axios";
 
-import { AuthResponse } from "types";
+import { AuthResponse } from "types/api";
 
 export const api = axios.create({
   withCredentials: true,

@@ -9,12 +9,11 @@ import { Block } from "components";
 import { useBlocks } from "hooks";
 import {
   Block as IBlock,
-  BlocksPatch,
   CreateDishForm,
-  CreateBlockParams,
   CreateSeparatorForm,
   BlockVariant,
 } from "types";
+import { BlocksPatch, CreateBlockParams } from "types/api";
 import { convertToBase64 } from "utils";
 
 import { CreateBlockModal } from "./CreateBlockModal";

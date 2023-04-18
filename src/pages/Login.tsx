@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { Input, Loading } from "components/UI";
 import { useUserStore } from "hooks";
-import { LoginData } from "types";
+import { LoginData } from "types/api";
 
 export const Login: React.FC = () => {
   const { login, status } = useUserStore((state) => ({

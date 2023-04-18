@@ -3,6 +3,7 @@ import React from "react";
 import { FaEye, FaPen } from "react-icons/fa";
 import { FiTrash } from "react-icons/fi";
 import { RiCameraOffLine, RiQrCodeLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
 import type { Menu as IMenu } from "types";
 
@@ -10,19 +11,19 @@ import { Input } from "./UI";
 
 interface MenuProps {
   data: IMenu;
+  viewUrl: string;
+  editUrl: string;
   onRequestQr: () => void;
   onDelete: () => void;
-  onView: () => void;
-  onEdit: () => void;
   onTogglePublish: (value: boolean) => void;
 }
 
 export const Menu: React.FC<MenuProps> = ({
   data,
+  viewUrl,
+  editUrl,
   onRequestQr,
-  onView,
   onDelete,
-  onEdit,
   onTogglePublish,
 }) => {
   const { title, description, imageUrl, isPublished } = data;
@@ -63,20 +64,19 @@ export const Menu: React.FC<MenuProps> = ({
         >
           <FiTrash />
         </button>
-        <button
+        <Link
           className="p-4 text-base-content text-opacity-60 hover:bg-base-300"
-          onClick={onView}
-          type="button"
+          to={viewUrl}
+          target="_blank"
         >
           <FaEye />
-        </button>
-        <button
+        </Link>
+        <Link
           className="p-4 text-base-content text-opacity-60 hover:bg-base-300"
-          onClick={onEdit}
-          type="button"
+          to={editUrl}
         >
           <FaPen />
-        </button>
+        </Link>
         <button
           className="p-4 text-base-content text-opacity-60 hover:bg-base-300"
           onClick={onRequestQr}

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { Input, Loading } from "components/UI";
 import { useUserStore } from "hooks";
-import { RegisterData } from "types";
+import { RegisterData } from "types/api";
 
 interface RegisterForm extends RegisterData {
   confirmPassword: string;

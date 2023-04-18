@@ -4,8 +4,9 @@
 import React, { ChangeEvent, useEffect, useMemo } from "react";
 
 import debounce from "lodash.debounce";
+import { BsArrowLeftSquare } from "react-icons/bs";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { BlockList } from "components";
 import { Input, Loading } from "components/UI";
@@ -63,48 +64,55 @@ export const EditMenu: React.FC = () => {
   }, []);
 
   return (
-    <Loading loading={isLoading} cover>
-      <div className="flex flex-col items-center pt-4">
-        {menu?.imageUrl && (
-          <div className="avatar">
-            <div className="w-20 rounded-full">
-              <img src={menu?.imageUrl || ""} alt={menu?.title} />
-            </div>
+    <div>
+      <Link to="/">
+        <BsArrowLeftSquare />
+      </Link>
+      <div className="container-main">
+        <Loading loading={isLoading} cover>
+          <div className="flex flex-col items-center pt-4">
+            {menu?.imageUrl && (
+              <div className="avatar mb-2">
+                <div className="w-20 rounded-full">
+                  <img src={menu?.imageUrl || ""} alt={menu?.title} />
+                </div>
+              </div>
+            )}
+
+            <Input
+              className="h-auto text-center text-xl font-bold"
+              containerClassName="w-auto"
+              type="text"
+              ghost
+              defaultValue={menu?.title || ""}
+              onChange={debouncedChangeTitle}
+              placeholder="Title"
+            />
+
+            <Input
+              className="text-md h-auto text-center"
+              containerClassName="w-auto"
+              type="text"
+              ghost
+              defaultValue={menu?.description || ""}
+              onChange={debouncedChangeDescription}
+              placeholder="Description"
+            />
+
+            <BlockList menuId={id} className="my-6" />
+
+            <Input
+              className="text-md h-auto text-center"
+              containerClassName="w-auto"
+              type="text"
+              ghost
+              defaultValue={menu?.footer || ""}
+              onChange={debouncedChangeFooter}
+              placeholder="Footer"
+            />
           </div>
-        )}
-
-        <Input
-          className="h-auto text-center text-xl font-bold"
-          containerClassName="w-auto"
-          type="text"
-          ghost
-          defaultValue={menu?.title || ""}
-          onChange={debouncedChangeTitle}
-          placeholder="Title"
-        />
-
-        <Input
-          className="text-md h-auto text-center"
-          containerClassName="w-auto"
-          type="text"
-          ghost
-          defaultValue={menu?.description || ""}
-          onChange={debouncedChangeDescription}
-          placeholder="Description"
-        />
-
-        <BlockList menuId={id} className="my-6" />
-
-        <Input
-          className="text-md h-auto text-center"
-          containerClassName="w-auto"
-          type="text"
-          ghost
-          defaultValue={menu?.footer || ""}
-          onChange={debouncedChangeFooter}
-          placeholder="Footer"
-        />
+        </Loading>
       </div>
-    </Loading>
+    </div>
   );
 };
