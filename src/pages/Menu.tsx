@@ -21,7 +21,7 @@ export const Menu: React.FC = () => {
   });
 
   return (
-    <Loading loading={isLoading} cover>
+    <Loading loading={isLoading}>
       <div className="flex h-screen flex-col items-center pt-4">
         {menu?.imageUrl && (
           <div className="avatar">

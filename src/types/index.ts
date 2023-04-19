@@ -17,11 +17,11 @@ interface BlockShared {
   updatedAt: string;
 }
 
-interface DishBlock extends BlockShared {
+export interface DishBlock extends BlockShared {
   type: BlockVariant.DISH;
   data: Dish;
 }
-interface SeparatorBlock extends BlockShared {
+export interface SeparatorBlock extends BlockShared {
   type: BlockVariant.SEPARATOR;
   data: Separator;
 }
@@ -36,7 +36,7 @@ export enum BlockVariant {
 export interface Dish {
   id: string;
   name: string;
-  imageUrl?: string;
+  image?: string;
   description?: string;
 }
 

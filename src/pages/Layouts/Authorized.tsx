@@ -8,7 +8,7 @@ export const Authorized: React.FC = () => {
   return (
     <div className="h-screen">
       <Header />
-      <div className="h-[calc(100vh-3.5rem)] bg-base-300">
+      <div className="h-[calc(100vh-3.5rem)] overflow-auto bg-base-300">
         <Outlet />
       </div>
     </div>

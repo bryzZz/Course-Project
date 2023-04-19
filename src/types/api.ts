@@ -28,15 +28,17 @@ export interface AuthResponse {
 }
 
 export interface CreateDishParams {
+  id: string;
   menuId: string;
   type: BlockVariant.DISH;
-  data: Omit<CreateDishForm, "image"> & { image?: string };
+  data: Omit<CreateDishForm, "image"> & { image?: string; id: string };
 }
 
 export interface CreateSeparatorParams {
+  id: string;
   menuId: string;
   type: BlockVariant.SEPARATOR;
-  data: CreateSeparatorForm;
+  data: CreateSeparatorForm & { id: string };
 }
 
 export type CreateBlockParams = CreateDishParams | CreateSeparatorParams;

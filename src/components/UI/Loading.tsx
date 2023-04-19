@@ -5,13 +5,11 @@ export interface LoadingProps {
   loading: boolean;
   children: React.ReactNode;
   type?: "spinner" | "dots";
-  cover?: boolean;
 }
 
 export const Loading: React.FC<LoadingProps> = ({
   loading,
   type = "spinner",
-  cover = false,
   children,
 }) => {
   if (type === "spinner") {

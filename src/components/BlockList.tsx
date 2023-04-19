@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
+import { v4 as uuidv4 } from "uuid";
 
 import { Block } from "components";
 import { useBlocks } from "hooks";
@@ -13,7 +14,7 @@ import {
   CreateSeparatorForm,
   BlockVariant,
 } from "types";
-import { BlocksPatch, CreateBlockParams } from "types/api";
+import { BlocksPatch } from "types/api";
 import { convertToBase64 } from "utils";
 
 import { CreateBlockModal } from "./CreateBlockModal";
@@ -42,36 +43,31 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
   const closeModal = () => setModalIsOpen(false);
 
   const onCreateDish = dishMethods.handleSubmit(async (data) => {
-    const res: CreateBlockParams = {
+    createBlock({
+      id: uuidv4(),
       type: BlockVariant.DISH,
       menuId,
       data: {
         ...data,
+        id: uuidv4(),
         image: await convertToBase64(data.image[0]),
       },
-    };
-
-    createBlock(res, {
-      onSettled: () => {
-        closeModal();
-        dishMethods.reset();
-      },
     });
+
+    closeModal();
+    separatorMethods.reset();
   });
 
   const onCreateSeparator = separatorMethods.handleSubmit(async (data) => {
-    const res: CreateBlockParams = {
+    createBlock({
+      id: uuidv4(),
       type: BlockVariant.SEPARATOR,
       menuId,
-      data,
-    };
-
-    createBlock(res, {
-      onSettled: () => {
-        closeModal();
-        separatorMethods.reset();
-      },
+      data: { ...data, id: uuidv4() },
     });
+
+    closeModal();
+    separatorMethods.reset();
   });
 
   const handleReorder = (reorderedBlocks: IBlock[]) => {

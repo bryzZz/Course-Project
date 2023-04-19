@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { blockKeys } from "constants/queryKeys";
 import { BlockService } from "services/BlockService";
-import { Block } from "types";
+import { Block, DishBlock, SeparatorBlock } from "types";
 
 export const useBlocks = (menuId: string) => {
   const queryClient = useQueryClient();
@@ -16,6 +16,37 @@ export const useBlocks = (menuId: string) => {
 
   const create = useMutation({
     mutationFn: BlockService.create,
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousBlocks = queryClient.getQueryData<Block[]>(queryKey);
+
+      if (previousBlocks) {
+        const maxPlace = Math.max(
+          ...previousBlocks.map((block) => block.place),
+          -1
+        );
+
+        const newBlock = {
+          ...variables,
+          place: maxPlace + 1,
+          createdAt: new Date().toString(),
+          updatedAt: new Date().toString(),
+        } as DishBlock | SeparatorBlock;
+
+        queryClient.setQueriesData<Block[]>(queryKey, [
+          ...previousBlocks,
+          newBlock,
+        ]);
+      }
+
+      return { previousBlocks };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousBlocks) {
+        queryClient.setQueryData<Block[]>(queryKey, context.previousBlocks);
+      }
+    },
     onSettled: () => {
       queryClient.invalidateQueries(queryKey);
     },
@@ -43,6 +74,9 @@ export const useBlocks = (menuId: string) => {
       if (context?.previousBlocks) {
         queryClient.setQueryData<Block[]>(queryKey, context.previousBlocks);
       }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(queryKey);
     },
   });
 
