@@ -2,11 +2,12 @@ import React from "react";
 
 import { FaEye, FaPen } from "react-icons/fa";
 import { FiTrash } from "react-icons/fi";
-import { RiCameraOffLine, RiQrCodeLine } from "react-icons/ri";
+import { RiQrCodeLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 import type { Menu as IMenu } from "types";
 
+import { MenuImage } from "./MenuImage";
 import { Input } from "./UI";
 
 interface MenuProps {
@@ -33,15 +34,7 @@ export const Menu: React.FC<MenuProps> = ({
     <div className="flex flex-col justify-between gap-6 rounded-lg bg-base-100 pt-6 shadow">
       <div className="px-6">
         <div className="flex items-start justify-between">
-          <div className="placeholder avatar">
-            <div className="w-12 rounded-full bg-neutral-focus text-base-content text-opacity-50">
-              {imageUrl ? (
-                <img src={imageUrl} alt={title} />
-              ) : (
-                <RiCameraOffLine className="h-6 w-6" />
-              )}
-            </div>
-          </div>
+          <MenuImage src={imageUrl ?? undefined} alt={title} />
         </div>
         <h3 className="text-lg">{title}</h3>
         <p className="text-xs">{description}</p>

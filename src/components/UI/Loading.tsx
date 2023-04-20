@@ -14,7 +14,7 @@ export const Loading: React.FC<LoadingProps> = ({
 }) => {
   if (type === "spinner") {
     return loading ? (
-      <div className="flex justify-center pt-[30%]">
+      <div className="flex justify-center p-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"

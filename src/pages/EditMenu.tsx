@@ -7,10 +7,11 @@ import debounce from "lodash.debounce";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 
-import { BlockList } from "components";
+import { BlockList, MenuImage } from "components";
 import { Input, Loading } from "components/UI";
 import { menuKeys } from "constants/queryKeys";
 import { MenuService } from "services/MenuService";
+import { convertToBase64 } from "utils";
 
 export const EditMenu: React.FC = () => {
   const id = useParams().id as string;
@@ -18,14 +19,14 @@ export const EditMenu: React.FC = () => {
   const queryClient = useQueryClient();
 
   const { data: menu, isLoading } = useQuery({
-    queryKey: menuKeys.detail(id as string),
-    queryFn: () => MenuService.get(id as string),
+    queryKey: menuKeys.detail(id),
+    queryFn: () => MenuService.get(id),
   });
 
   const update = useMutation({
     mutationFn: MenuService.update,
     onSettled: () => {
-      queryClient.invalidateQueries(menuKeys.detail(id as string));
+      queryClient.invalidateQueries(menuKeys.detail(id));
     },
   });
 
@@ -37,6 +38,13 @@ export const EditMenu: React.FC = () => {
   };
   const handleChangeFooter = (e: ChangeEvent<HTMLInputElement>) => {
     update.mutate({ [id]: { footer: e.target.value } });
+  };
+  const handleChangeImage = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.[0]) return;
+
+    const imageUrl = await convertToBase64(e.target.files[0]);
+
+    update.mutate({ [id]: { imageUrl } });
   };
 
   const debouncedChangeTitle = useMemo(
@@ -58,6 +66,8 @@ export const EditMenu: React.FC = () => {
   useEffect(() => {
     return () => {
       debouncedChangeTitle.cancel();
+      debouncedChangeDescription.cancel();
+      debouncedChangeFooter.cancel();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -66,13 +76,11 @@ export const EditMenu: React.FC = () => {
     <div className="container-main pb-12">
       <Loading loading={isLoading}>
         <div className="flex flex-col items-center pt-4">
-          {menu?.imageUrl && (
-            <div className="avatar mb-2">
-              <div className="w-20 rounded-full">
-                <img src={menu?.imageUrl || ""} alt={menu?.title} />
-              </div>
-            </div>
-          )}
+          <MenuImage
+            src={menu?.imageUrl ?? undefined}
+            alt={menu?.title}
+            onChange={handleChangeImage}
+          />
 
           <Input
             className="h-auto text-center text-xl font-bold"

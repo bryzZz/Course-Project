@@ -18,7 +18,7 @@ import { BlocksPatch } from "types/api";
 import { convertToBase64 } from "utils";
 
 import { CreateBlockModal } from "./CreateBlockModal";
-import { DraggableList } from "./UI";
+import { DraggableList, Loading } from "./UI";
 
 interface BlockListProps {
   menuId: string;
@@ -83,14 +83,16 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
   return (
     <>
       <div className={twMerge("w-full max-w-3xl", className)}>
-        <DraggableList
-          items={sortedBlocks ?? []}
-          droppableId="blocks"
-          onReorder={handleReorder}
-          render={(block, ref, p1, p2) => (
-            <Block data={block} ref={ref} {...p1} {...p2} />
-          )}
-        />
+        <Loading loading={isBlocksLoading}>
+          <DraggableList
+            items={sortedBlocks ?? []}
+            droppableId="blocks"
+            onReorder={handleReorder}
+            render={(block, ref, p1, p2) => (
+              <Block data={block} ref={ref} {...p1} {...p2} />
+            )}
+          />
+        </Loading>
         <div
           className={twMerge(
             "cursor-pointer rounded-md py-6 text-center text-lg text-opacity-30",

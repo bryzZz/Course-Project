@@ -45,7 +45,7 @@ export type CreateBlockParams = CreateDishParams | CreateSeparatorParams;
 
 export interface MenusPatch {
   [id: string]: Partial<
-    Pick<Menu, "title" | "description" | "footer" | "isPublished">
+    Pick<Menu, "title" | "description" | "footer" | "isPublished" | "imageUrl">
   >;
 }
 
