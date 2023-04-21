@@ -27,14 +27,14 @@ export const Menu: React.FC<MenuProps> = ({
   onDelete,
   onTogglePublish,
 }) => {
-  const { title, description, imageUrl, isPublished } = data;
+  const { title, description, image, isPublished } = data;
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div className="flex flex-col justify-between gap-6 rounded-lg bg-base-100 pt-6 shadow">
       <div className="px-6">
         <div className="flex items-start justify-between">
-          <MenuImage src={imageUrl ?? undefined} alt={title} />
+          <MenuImage src={image ?? undefined} alt={title} />
         </div>
         <h3 className="text-lg">{title}</h3>
         <p className="text-xs">{description}</p>

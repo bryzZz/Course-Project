@@ -2,23 +2,15 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from "react";
 
-import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { v4 as uuidv4 } from "uuid";
 
-import { Block } from "components";
+import { Block, BlockModal, ChooseBlockModal } from "components";
+import { DraggableList, Loading } from "components/UI";
 import { useBlocks } from "hooks";
-import {
-  Block as IBlock,
-  CreateDishForm,
-  CreateSeparatorForm,
-  BlockVariant,
-} from "types";
-import { BlocksPatch } from "types/api";
+import { Block as BlockType, BlockVariant, BlockForm } from "types";
+import { BlocksPatch, CreateBlockParams } from "types/api";
 import { convertToBase64 } from "utils";
-
-import { CreateBlockModal } from "./CreateBlockModal";
-import { DraggableList, Loading } from "./UI";
 
 interface BlockListProps {
   menuId: string;
@@ -29,48 +21,75 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
   const {
     data: blocks,
     isLoading: isBlocksLoading,
-    create: { mutate: createBlock, isLoading: isBlockCreating },
+    create: { mutate: createBlock },
+    update: { mutate: updateBlock },
     reorder: { mutate: reorderBlocks },
   } = useBlocks(menuId);
 
   const sortedBlocks = blocks?.sort((a, b) => a.place - b.place);
 
-  const dishMethods = useForm<CreateDishForm>();
-  const separatorMethods = useForm<CreateSeparatorForm>();
+  const [chosenBlock, setChosenBlock] = useState<BlockType | null>(null);
+  const [blockVariant, setBlockVariant] = useState<BlockVariant>("Dish");
+  const [blockAction, setBlockAction] = useState<"update" | "create">("create");
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const openModal = () => setModalIsOpen(true);
-  const closeModal = () => setModalIsOpen(false);
+  const [isChooseModalOpen, setIsChooseModalOpen] = useState(false);
+  const openChooseModal = () => setIsChooseModalOpen(true);
+  const closeChooseModal = () => setIsChooseModalOpen(false);
 
-  const onCreateDish = dishMethods.handleSubmit(async (data) => {
-    createBlock({
-      id: uuidv4(),
-      type: BlockVariant.DISH,
-      menuId,
-      data: {
-        ...data,
+  const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
+  const openBlockModal = () => setIsBlockModalOpen(true);
+  const closeBlockModal = () => setIsBlockModalOpen(false);
+
+  const handleChooseBlock = (blockVariant: BlockVariant) => {
+    setBlockVariant(blockVariant);
+    setChosenBlock(null);
+    setBlockAction("create");
+
+    closeChooseModal();
+    openBlockModal();
+  };
+
+  const handleCreateBlock = async ({ type, data }: BlockForm) => {
+    if (blockAction === "create") {
+      const block = {
         id: uuidv4(),
-        image: await convertToBase64(data.image[0]),
-      },
-    });
+        type,
+        menuId,
+        data: { ...data, id: uuidv4() },
+      } as CreateBlockParams;
 
-    closeModal();
-    separatorMethods.reset();
-  });
+      if (type === "Dish") {
+        block.data = {
+          ...block.data,
+          image: await convertToBase64(data.image[0]),
+        };
+      }
 
-  const onCreateSeparator = separatorMethods.handleSubmit(async (data) => {
-    createBlock({
-      id: uuidv4(),
-      type: BlockVariant.SEPARATOR,
-      menuId,
-      data: { ...data, id: uuidv4() },
-    });
+      return createBlock(block);
+    }
 
-    closeModal();
-    separatorMethods.reset();
-  });
+    if (blockAction === "update" && chosenBlock) {
+      const block = {
+        id: chosenBlock.id,
+        type: chosenBlock.type,
+        menuId: chosenBlock.menuId,
+        data: { ...data, id: chosenBlock.data.id },
+      } as CreateBlockParams;
 
-  const handleReorder = (reorderedBlocks: IBlock[]) => {
+      if (type === "Dish") {
+        block.data = {
+          ...block.data,
+          image: await convertToBase64(data.image[0]),
+        };
+      }
+
+      return updateBlock(block);
+    }
+
+    return null;
+  };
+
+  const handleReorder = (reorderedBlocks: BlockType[]) => {
     reorderBlocks(
       reorderedBlocks.reduce((acc, cur, index) => {
         acc[cur.id] = { place: index };
@@ -78,6 +97,13 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
         return acc;
       }, {} as BlocksPatch)
     );
+  };
+
+  const handleBlockClick = (block: BlockType) => {
+    setChosenBlock(block);
+    setBlockVariant(block.type);
+    setBlockAction("update");
+    openBlockModal();
   };
 
   return (
@@ -89,7 +115,13 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
             droppableId="blocks"
             onReorder={handleReorder}
             render={(block, ref, p1, p2) => (
-              <Block data={block} ref={ref} {...p1} {...p2} />
+              <Block
+                data={block}
+                ref={ref}
+                {...p1}
+                {...p2}
+                onClick={() => handleBlockClick(block)}
+              />
             )}
           />
         </Loading>
@@ -99,19 +131,22 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
             "border-2 border-dashed border-base-content border-opacity-30",
             "hover:border-opacity-60 active:border-primary active:text-primary"
           )}
-          onClick={openModal}
+          onClick={openChooseModal}
         >
           Add New Block
         </div>
       </div>
-      <CreateBlockModal
-        isOpen={modalIsOpen}
-        isCreating={isBlockCreating}
-        onClose={closeModal}
-        dishMethods={dishMethods}
-        onCreateDish={onCreateDish}
-        separatorMethods={separatorMethods}
-        onCreateSeparator={onCreateSeparator}
+      <ChooseBlockModal
+        isOpen={isChooseModalOpen}
+        onClose={closeChooseModal}
+        onChoose={handleChooseBlock}
+      />
+      <BlockModal
+        isOpen={isBlockModalOpen}
+        onClose={closeBlockModal}
+        onSubmit={handleCreateBlock}
+        blockVariant={blockVariant}
+        initialData={chosenBlock}
       />
     </>
   );

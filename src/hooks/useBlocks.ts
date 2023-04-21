@@ -15,7 +15,7 @@ export const useBlocks = (menuId: string) => {
   });
 
   const create = useMutation({
-    mutationFn: BlockService.create,
+    mutationFn: BlockService.upsert,
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey });
 
@@ -38,6 +38,37 @@ export const useBlocks = (menuId: string) => {
           ...previousBlocks,
           newBlock,
         ]);
+      }
+
+      return { previousBlocks };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousBlocks) {
+        queryClient.setQueryData<Block[]>(queryKey, context.previousBlocks);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(queryKey);
+    },
+  });
+
+  const update = useMutation({
+    mutationFn: BlockService.upsert,
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousBlocks = queryClient.getQueryData<Block[]>(queryKey);
+
+      if (previousBlocks) {
+        const newBlocks = previousBlocks.map((block) => {
+          if (block.id === variables.id) {
+            return { ...block, ...variables };
+          }
+
+          return block;
+        });
+
+        queryClient.setQueriesData<Block[]>(queryKey, newBlocks);
       }
 
       return { previousBlocks };
@@ -87,5 +118,5 @@ export const useBlocks = (menuId: string) => {
   //   },
   // });
 
-  return Object.assign(res, { create, reorder /* , deleteMutation */ });
+  return Object.assign(res, { create, update, reorder /* , deleteMutation */ });
 };

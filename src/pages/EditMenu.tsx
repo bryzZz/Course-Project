@@ -42,9 +42,9 @@ export const EditMenu: React.FC = () => {
   const handleChangeImage = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0]) return;
 
-    const imageUrl = await convertToBase64(e.target.files[0]);
+    const image = await convertToBase64(e.target.files[0]);
 
-    update.mutate({ [id]: { imageUrl } });
+    update.mutate({ [id]: { image } });
   };
 
   const debouncedChangeTitle = useMemo(
@@ -77,7 +77,7 @@ export const EditMenu: React.FC = () => {
       <Loading loading={isLoading}>
         <div className="flex flex-col items-center pt-4">
           <MenuImage
-            src={menu?.imageUrl ?? undefined}
+            src={menu?.image ?? undefined}
             alt={menu?.title}
             onChange={handleChangeImage}
           />

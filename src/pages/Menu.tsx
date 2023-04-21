@@ -23,10 +23,10 @@ export const Menu: React.FC = () => {
   return (
     <Loading loading={isLoading}>
       <div className="flex h-screen flex-col items-center pt-4">
-        {menu?.imageUrl && (
+        {menu?.image && (
           <div className="avatar">
             <div className="w-20 rounded-full">
-              <img src={menu?.imageUrl || ""} alt={menu?.title} />
+              <img src={menu?.image || ""} alt={menu?.title} />
             </div>
           </div>
         )}

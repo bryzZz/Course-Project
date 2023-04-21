@@ -2,7 +2,7 @@ import { ComponentProps, forwardRef } from "react";
 
 import { twMerge } from "tailwind-merge";
 
-import { BlockVariant, Block as BlockType } from "types";
+import { Block as BlockType } from "types";
 
 interface BlockProps extends ComponentProps<"div"> {
   data: BlockType;
@@ -12,7 +12,7 @@ interface BlockProps extends ComponentProps<"div"> {
 
 export const Block = forwardRef<HTMLDivElement, BlockProps>(
   ({ data, dishClassName = "", separatorClassName = "", ...other }, ref) => {
-    if (data.type === BlockVariant.DISH) {
+    if (data.type === "Dish") {
       return (
         <div
           className={twMerge(
@@ -24,7 +24,7 @@ export const Block = forwardRef<HTMLDivElement, BlockProps>(
         >
           <div className="avatar">
             <div className="w-16 rounded-md">
-              <img src={data?.data?.imageUrl} alt={data?.data?.name} />
+              <img src={data?.data?.image} alt={data?.data?.name} />
             </div>
           </div>
           <div>
@@ -35,7 +35,7 @@ export const Block = forwardRef<HTMLDivElement, BlockProps>(
       );
     }
 
-    if (data.type === BlockVariant.SEPARATOR) {
+    if (data.type === "Separator") {
       return (
         <div
           className={twMerge(

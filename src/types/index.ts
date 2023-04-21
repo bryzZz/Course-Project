@@ -3,7 +3,7 @@ export interface Menu {
   title: string;
   description: string | null;
   footer: string | null;
-  imageUrl: string | null;
+  image: string | null;
   isPublished: boolean;
   createdAt: string;
   updatedAt: string;
@@ -18,20 +18,17 @@ interface BlockShared {
 }
 
 export interface DishBlock extends BlockShared {
-  type: BlockVariant.DISH;
+  type: "Dish";
   data: Dish;
 }
 export interface SeparatorBlock extends BlockShared {
-  type: BlockVariant.SEPARATOR;
+  type: "Separator";
   data: Separator;
 }
 
 export type Block = DishBlock | SeparatorBlock;
 
-export enum BlockVariant {
-  DISH = "DISH",
-  SEPARATOR = "SEPARATOR",
-}
+export type BlockVariant = Block["type"];
 
 export interface Dish {
   id: string;
@@ -56,12 +53,16 @@ export interface CreateMenuForm {
   image?: FileList;
 }
 
-export interface CreateDishForm {
+export interface DishForm {
   name: string;
   image: FileList;
   description: string;
 }
 
-export interface CreateSeparatorForm {
+export interface SeparatorForm {
   text: string;
 }
+
+export type BlockForm =
+  | { type: "Dish"; data: DishForm }
+  | { type: "Separator"; data: SeparatorForm };

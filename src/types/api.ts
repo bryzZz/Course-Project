@@ -1,10 +1,4 @@
-import {
-  Block,
-  BlockVariant,
-  CreateDishForm,
-  CreateSeparatorForm,
-  Menu,
-} from "types";
+import { Block, DishForm, SeparatorForm, Menu } from "types";
 
 export type LoginData = {
   email: string;
@@ -28,24 +22,24 @@ export interface AuthResponse {
 }
 
 export interface CreateDishParams {
-  id: string;
-  menuId: string;
-  type: BlockVariant.DISH;
-  data: Omit<CreateDishForm, "image"> & { image?: string; id: string };
+  id?: string;
+  menuId?: string;
+  type: "Dish";
+  data: Omit<DishForm, "image"> & { image?: string; id: string };
 }
 
 export interface CreateSeparatorParams {
   id: string;
   menuId: string;
-  type: BlockVariant.SEPARATOR;
-  data: CreateSeparatorForm & { id: string };
+  type: "Separator";
+  data: SeparatorForm & { id: string };
 }
 
 export type CreateBlockParams = CreateDishParams | CreateSeparatorParams;
 
 export interface MenusPatch {
   [id: string]: Partial<
-    Pick<Menu, "title" | "description" | "footer" | "isPublished" | "imageUrl">
+    Pick<Menu, "title" | "description" | "footer" | "isPublished" | "image">
   >;
 }
 

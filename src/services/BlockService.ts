@@ -4,7 +4,7 @@ import { CreateBlockParams, BlocksPatch } from "types/api";
 import { api } from "../http";
 
 export class BlockService {
-  static async create(args: CreateBlockParams) {
+  static async upsert(args: CreateBlockParams) {
     return api.post<Block>("/blocks", args);
   }
 
