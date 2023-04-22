@@ -17,4 +17,8 @@ export class BlockService {
   static async update(updates: BlocksPatch) {
     return api.put<Block[]>("/blocks", { updates }).then((r) => r.data);
   }
+
+  static async delete(id: string) {
+    return api.delete("/blocks", { params: { id } });
+  }
 }

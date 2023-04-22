@@ -14,7 +14,7 @@ export const useBlocks = (menuId: string) => {
     queryFn: () => BlockService.get(menuId),
   });
 
-  const create = useMutation({
+  const createBlock = useMutation({
     mutationFn: BlockService.upsert,
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey });
@@ -52,7 +52,7 @@ export const useBlocks = (menuId: string) => {
     },
   });
 
-  const update = useMutation({
+  const updateBlock = useMutation({
     mutationFn: BlockService.upsert,
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey });
@@ -83,7 +83,7 @@ export const useBlocks = (menuId: string) => {
     },
   });
 
-  const reorder = useMutation({
+  const reorderBlocks = useMutation({
     mutationFn: BlockService.update,
     onMutate: async (variables) => {
       await queryClient.cancelQueries({ queryKey });
@@ -111,12 +111,37 @@ export const useBlocks = (menuId: string) => {
     },
   });
 
-  // const deleteMutation = useMutation({
-  //   mutationFn: MenuService.delete,
-  //   onSettled: () => {
-  //     queryClient.invalidateQueries(queryKey);
-  //   },
-  // });
+  const deleteBlock = useMutation({
+    mutationFn: BlockService.delete,
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey });
 
-  return Object.assign(res, { create, update, reorder /* , deleteMutation */ });
+      const previousBlocks = queryClient.getQueryData<Block[]>(queryKey);
+
+      if (previousBlocks) {
+        const newBlocks = previousBlocks.filter(
+          (block) => block.id !== variables
+        );
+
+        queryClient.setQueriesData<Block[]>(queryKey, newBlocks);
+      }
+
+      return { previousBlocks };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousBlocks) {
+        queryClient.setQueryData<Block[]>(queryKey, context.previousBlocks);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(queryKey);
+    },
+  });
+
+  return Object.assign(res, {
+    createBlock,
+    updateBlock,
+    deleteBlock,
+    reorderBlocks,
+  });
 };

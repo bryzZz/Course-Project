@@ -10,7 +10,6 @@ import { DraggableList, Loading } from "components/UI";
 import { useBlocks } from "hooks";
 import { Block as BlockType, BlockVariant, BlockForm } from "types";
 import { BlocksPatch, CreateBlockParams } from "types/api";
-import { convertToBase64 } from "utils";
 
 interface BlockListProps {
   menuId: string;
@@ -21,9 +20,10 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
   const {
     data: blocks,
     isLoading: isBlocksLoading,
-    create: { mutate: createBlock },
-    update: { mutate: updateBlock },
-    reorder: { mutate: reorderBlocks },
+    createBlock,
+    updateBlock,
+    deleteBlock,
+    reorderBlocks,
   } = useBlocks(menuId);
 
   const sortedBlocks = blocks?.sort((a, b) => a.place - b.place);
@@ -41,8 +41,8 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
   const closeBlockModal = () => setIsBlockModalOpen(false);
 
   const handleChooseBlock = (blockVariant: BlockVariant) => {
-    setBlockVariant(blockVariant);
     setChosenBlock(null);
+    setBlockVariant(blockVariant);
     setBlockAction("create");
 
     closeChooseModal();
@@ -58,14 +58,7 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
         data: { ...data, id: uuidv4() },
       } as CreateBlockParams;
 
-      if (type === "Dish") {
-        block.data = {
-          ...block.data,
-          image: await convertToBase64(data.image[0]),
-        };
-      }
-
-      return createBlock(block);
+      return createBlock.mutate(block);
     }
 
     if (blockAction === "update" && chosenBlock) {
@@ -76,21 +69,20 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
         data: { ...data, id: chosenBlock.data.id },
       } as CreateBlockParams;
 
-      if (type === "Dish") {
-        block.data = {
-          ...block.data,
-          image: await convertToBase64(data.image[0]),
-        };
-      }
-
-      return updateBlock(block);
+      return updateBlock.mutate(block);
     }
 
     return null;
   };
 
+  const handleDeleteBlock = () => {
+    if (!chosenBlock) return;
+
+    deleteBlock.mutate(chosenBlock.id);
+  };
+
   const handleReorder = (reorderedBlocks: BlockType[]) => {
-    reorderBlocks(
+    reorderBlocks.mutate(
       reorderedBlocks.reduce((acc, cur, index) => {
         acc[cur.id] = { place: index };
 
@@ -103,6 +95,7 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
     setChosenBlock(block);
     setBlockVariant(block.type);
     setBlockAction("update");
+
     openBlockModal();
   };
 
@@ -147,6 +140,7 @@ export const BlockList: React.FC<BlockListProps> = ({ menuId, className }) => {
         onSubmit={handleCreateBlock}
         blockVariant={blockVariant}
         initialData={chosenBlock}
+        onDelete={handleDeleteBlock}
       />
     </>
   );

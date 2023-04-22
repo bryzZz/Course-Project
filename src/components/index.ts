@@ -6,3 +6,4 @@ export * from "./Block";
 export * from "./MenuImage";
 export * from "./ChooseBlockModal";
 export * from "./BlockModal";
+export * from "./ImageInput";

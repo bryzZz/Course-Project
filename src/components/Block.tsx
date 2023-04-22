@@ -13,6 +13,10 @@ interface BlockProps extends ComponentProps<"div"> {
 export const Block = forwardRef<HTMLDivElement, BlockProps>(
   ({ data, dishClassName = "", separatorClassName = "", ...other }, ref) => {
     if (data.type === "Dish") {
+      const src = data?.data?.image.startsWith("data:image")
+        ? data?.data?.image
+        : `${data?.data?.image}?${performance.now()}`;
+
       return (
         <div
           className={twMerge(
@@ -24,7 +28,7 @@ export const Block = forwardRef<HTMLDivElement, BlockProps>(
         >
           <div className="avatar">
             <div className="w-16 rounded-md">
-              <img src={data?.data?.image} alt={data?.data?.name} />
+              <img src={src} alt={data?.data?.name} />
             </div>
           </div>
           <div>

@@ -33,7 +33,7 @@ export type BlockVariant = Block["type"];
 export interface Dish {
   id: string;
   name: string;
-  image?: string;
+  image: string;
   description?: string;
 }
 
@@ -55,7 +55,7 @@ export interface CreateMenuForm {
 
 export interface DishForm {
   name: string;
-  image: FileList;
+  image: string;
   description: string;
 }
 

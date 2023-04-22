@@ -8,6 +8,7 @@ import { SeparatorBlock, SeparatorForm } from "types";
 interface SeparatorProps {
   onSubmit: (data: SeparatorForm) => void;
   initialData: SeparatorBlock | null;
+  onDelete: () => void;
 }
 
 export const Separator: React.FC<SeparatorProps> = ({

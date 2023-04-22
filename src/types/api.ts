@@ -25,7 +25,7 @@ export interface CreateDishParams {
   id?: string;
   menuId?: string;
   type: "Dish";
-  data: Omit<DishForm, "image"> & { image?: string; id: string };
+  data: DishForm & { id: string };
 }
 
 export interface CreateSeparatorParams {

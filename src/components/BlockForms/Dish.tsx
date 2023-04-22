@@ -1,31 +1,47 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
+import { ImageInput } from "components/ImageInput";
 import { Input, Textarea } from "components/UI";
 import { DishBlock, DishForm } from "types";
 
 interface DishProps {
   onSubmit: (data: DishForm) => void;
   initialData: DishBlock | null;
+  canDelete: boolean;
+  onDelete: () => void;
 }
 
-export const Dish: React.FC<DishProps> = ({ onSubmit, initialData }) => {
+export const Dish: React.FC<DishProps> = ({
+  onSubmit,
+  initialData,
+  canDelete,
+  onDelete,
+}) => {
   const {
     register,
     handleSubmit: handleSubmit_,
     reset,
-  } = useForm<DishForm>({
-    defaultValues: {
-      name: initialData?.data.name,
-      description: initialData?.data.description,
-    },
-  });
+    control,
+    setValue,
+  } = useForm<DishForm>();
 
   const handleSubmit = handleSubmit_((data) => {
     onSubmit(data);
     reset();
   });
+
+  useLayoutEffect(() => {
+    setValue("name", initialData?.data.name ?? "");
+    setValue("description", initialData?.data.description ?? "");
+    setValue("image", initialData?.data.image ?? "");
+  }, [
+    initialData?.data.description,
+    initialData?.data.image,
+    initialData?.data.name,
+    setValue,
+  ]);
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -35,12 +51,17 @@ export const Dish: React.FC<DishProps> = ({ onSubmit, initialData }) => {
         placeholder="Pepperoni pizza"
         {...register("name", { required: true })}
       />
-      <Input
-        className="file-input-bordered file-input w-full max-w-xs focus:outline-none"
-        label="Image"
-        type="file"
-        accept="image/*"
-        {...register("image", { required: true })}
+      <Controller
+        name="image"
+        control={control}
+        render={({ field: { value, onChange } }) => (
+          <ImageInput
+            value={value}
+            onChange={onChange}
+            alt="Dish"
+            label="Image"
+          />
+        )}
       />
       <Textarea
         label="Description"
@@ -50,9 +71,16 @@ export const Dish: React.FC<DishProps> = ({ onSubmit, initialData }) => {
         maxLength={300}
         {...register("description", { required: true })}
       />
-      <button className="btn w-full rounded-full" type="submit">
-        Submit
-      </button>
+      <div>
+        {canDelete && (
+          <button className="btn rounded-md" type="button" onClick={onDelete}>
+            Delete
+          </button>
+        )}
+        <button className="btn rounded-md" type="submit">
+          Submit
+        </button>
+      </div>
     </form>
   );
 };
