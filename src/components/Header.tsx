@@ -3,6 +3,7 @@
 import React from "react";
 
 import { BsPersonCircle, BsChevronDown } from "react-icons/bs";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useUserStore } from "hooks";
 
@@ -12,9 +13,17 @@ export const Header: React.FC = () => {
     logout: state.logout,
   }));
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
     <header className="h-14 bg-base-100 shadow">
       <div className="container-main flex h-full items-center">
+        {location.pathname.startsWith("/edit") && (
+          <button type="button" onClick={() => navigate("/")}>
+            {"< Назад"}
+          </button>
+        )}
         <div className="dropdown-bottom dropdown-end dropdown ml-auto">
           <label tabIndex={0}>
             <div className="flex cursor-pointer items-center gap-2 rounded p-2 text-base-content text-opacity-80 transition-all hover:bg-base-content hover:bg-opacity-10">

@@ -21,18 +21,20 @@ export const Login: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col items-center gap-4 pt-40">
+    <div className="flex flex-col items-center gap-4 px-4 pt-40">
       <h2 className="text-2xl font-semibold">Login</h2>
-      <div className="w-full max-w-md overflow-hidden rounded-2xl py-6 px-8 shadow-xl">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl py-6 px-8 shadow-2xl">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <Input
             label="Email"
             type="email"
+            placeholder="a@mail.ru"
             {...register("email", { required: true })}
           />
           <Input
             label="Password"
             type="password"
+            placeholder="******"
             {...register("password", { required: true })}
           />
           <button className="btn w-full rounded-full" type="submit">

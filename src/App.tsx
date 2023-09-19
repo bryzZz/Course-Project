@@ -31,10 +31,10 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <Loading loading={status === "init"} cover>
+        <Loading loading={status === "init"}>
           <Routes />
         </Loading>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </BrowserRouter>
   );
